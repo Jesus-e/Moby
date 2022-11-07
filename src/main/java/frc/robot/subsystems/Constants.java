@@ -7,6 +7,7 @@ public class Constants {
     public static final int Talon1 = 6;
     public static final int Talon2 = 8;
     public static final int Talon3 = 9;
+    public static final int Talon4 = 10;
 
     //Drive
     public static final double kDriveRampDeltaSpeed = 0.1;
