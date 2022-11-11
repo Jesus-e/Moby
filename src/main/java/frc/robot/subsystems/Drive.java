@@ -38,7 +38,7 @@ public class Drive extends SubsystemBase {
   //------------------// Funciones del subsistema //-------------------------------//
 
   //funcion principal de Drive con argumentos de entrada de controles
-  public void mainDrive(double xInSpeed, double yInSpeed, double inDirectThrottle, int direction, boolean frontChange){
+  public void mainDrive(double xInSpeed, double yInSpeed, double inDirectThrottle, boolean frontChange){
 
     updateToggle(frontChange);
 
@@ -98,7 +98,7 @@ public class Drive extends SubsystemBase {
     SmartDashboard.putNumber("Direct Throttle", absMove);
   }
 
-  //----------------------------
+  //Funcion para actualizar el toggle
   public void updateToggle(boolean joystick)
   {
       if(joystick){
@@ -111,6 +111,13 @@ public class Drive extends SubsystemBase {
       }
   }
 
+  //Funcion mover motores en autonomo
+  public void outMotoresAuto(double v1, double v2, double v3, double v4){
+    mMotor1FrontRight.set(ControlMode.PercentOutput, v1);
+    mMotor2BackRight.set(ControlMode.PercentOutput, v2);
+    mMotor3FrontLeft.set(ControlMode.PercentOutput, v3);
+    mMotor4BackLeft.set(ControlMode.PercentOutput, v4);
+  }
 
   @Override
   public void periodic() {

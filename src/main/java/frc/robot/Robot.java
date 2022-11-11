@@ -7,6 +7,9 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.auto.actions.GetTimeAction;
+import frc.robot.auto.modes.Test1;
+import frc.robot.subsystems.ControlBoard;
 import frc.robot.subsystems.Drive;
 
 /**
@@ -18,8 +21,14 @@ import frc.robot.subsystems.Drive;
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
+  //Subsistemas
+  ControlBoard mControlBoard = new ControlBoard();
   Drive mDrive = new Drive();
   private RobotContainer m_robotContainer;
+
+  //Autonomo
+  GetTimeAction mAutoTimer = new GetTimeAction();
+  Test1 mTest1Mode = new Test1();
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -60,15 +69,20 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
-    // schedule the autonomous command (example)
+/*     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
-    }
+    } */
+
+    mAutoTimer.autoRelativeTimeControl(); //inicializar el timeStap relativo a auto
+
   }
 
   /** This function is called periodically during autonomous. */
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+    mAutoTimer.autoAbsoluteTimeControl(); //inicializa el timeStap absoluto
+  }
 
   @Override
   public void teleopInit() {
@@ -83,7 +97,9 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    mDrive.mainDrive(mControlBoard.getYDrive(), mControlBoard.getXDrive(), mControlBoard.getTriggers(), mControlBoard.getXButton());
+  }
 
   @Override
   public void testInit() {
