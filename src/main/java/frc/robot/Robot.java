@@ -11,6 +11,7 @@ import frc.robot.auto.actions.GetTimeAction;
 import frc.robot.auto.modes.Test1;
 import frc.robot.subsystems.ControlBoard;
 import frc.robot.subsystems.Drive;
+import frc.robot.subsystems.Intake;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -24,6 +25,7 @@ public class Robot extends TimedRobot {
   //Subsistemas
   ControlBoard mControlBoard = new ControlBoard();
   Drive mDrive = new Drive();
+  Intake mIntake = new Intake();
   private RobotContainer m_robotContainer;
 
   //Autonomo
@@ -98,7 +100,8 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    mDrive.mainDrive(mControlBoard.getYDrive(), mControlBoard.getXDrive(), mControlBoard.getTriggers(), mControlBoard.getXButton());
+    mDrive.mainDrive(mControlBoard.getYDrive(), mControlBoard.getXDrive(), mControlBoard.getTriggers(), mControlBoard.getXButtonDrive());
+    mIntake.mainIntake(mControlBoard.getAButtonDrive());
   }
 
   @Override
