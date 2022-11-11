@@ -8,6 +8,8 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.auto.actions.GetTimeAction;
+import frc.robot.auto.actions.MoveForwardAction;
+import frc.robot.auto.actions.StopAction;
 import frc.robot.auto.modes.Test1;
 import frc.robot.subsystems.ControlBoard;
 import frc.robot.subsystems.Drive;
@@ -30,6 +32,8 @@ public class Robot extends TimedRobot {
 
   //Autonomo
   GetTimeAction mAutoTimer = new GetTimeAction();
+  MoveForwardAction mForwardAction = new MoveForwardAction();
+  StopAction mStopAction = new StopAction();
   Test1 mTest1Mode = new Test1();
 
   /**
@@ -84,6 +88,10 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {
     mAutoTimer.autoAbsoluteTimeControl(); //inicializa el timeStap absoluto
+    if(mAutoTimer.getAbsoluteTimer()-mAutoTimer.getRelativeTimer()<3){
+      mForwardAction.finalMoveForwardACtion();
+    }
+    else mStopAction.finalStopAction();
   }
 
   @Override

@@ -8,8 +8,10 @@ public class Constants {
     //Checar los numeros de los ejes y botones del control
     public static final int LeftXAxis = 0;
     public static final int LeftYAxis = 1; 
-    public static final int RightXAxis = 2;
-    public static final int RightYAxis = 3;
+    public static final int LeftTrigger = 2; 
+    public static final int RightTrigger = 3; 
+    public static final int RightXAxis = 4;
+    public static final int RightYAxis = 5;
     //Botones
     public static final int AButton = 1;
     public static final int BButton = 2;
