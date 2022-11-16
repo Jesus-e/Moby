@@ -21,15 +21,19 @@ public class Constants {
 
 
     //Talons
-    public static final int Talon0 = 1;
-    public static final int Talon1 = 6;
-    public static final int Talon2 = 8;
-    public static final int Talon3 = 9;
-    public static final int Talon4 = 10;
+    public static final int Talon0 = 10; //1, 6, 8, 9, 10, 2, 3, 4, 5
+    public static final int Talon1 = 1;
+    public static final int Talon2 = 2;
+    public static final int Talon3 = 3;
+    public static final int Talon4 = 4;
+    public static final int Talon5 = 5;
+    public static final int Talon6 = 6;
+    public static final int Talon7 = 8;
+    public static final int Talon8 = 9;
 
     //Drive
     public static final double kDriveRampDeltaSpeed = 0.1;
-    public static final double kDriveSensitivity = 0.8;
+    public static final double kDriveSensitivity = 0.5;
     public static final int kDriveRightFrontId = Talon0;
     public static final int kDriveLeftFrontId = Talon1;
     public static final int kDriveRightBackId = Talon2;
