@@ -10,10 +10,12 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.auto.actions.GetTimeAction;
 import frc.robot.auto.actions.MoveForwardAction;
 import frc.robot.auto.actions.StopAction;
+import frc.robot.auto.actions.Turn;
 import frc.robot.auto.modes.Test1;
 import frc.robot.subsystems.ControlBoard;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Piston;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -28,13 +30,15 @@ public class Robot extends TimedRobot {
   ControlBoard mControlBoard = new ControlBoard();
   Drive mDrive = new Drive();
   Intake mIntake = new Intake();
+  Piston mPiston = new Piston();
   private RobotContainer m_robotContainer;
 
-  //Autonomo
+ //Autonomo
   GetTimeAction mAutoTimer = new GetTimeAction();
   MoveForwardAction mForwardAction = new MoveForwardAction();
   StopAction mStopAction = new StopAction();
   Test1 mTest1Mode = new Test1();
+  Turn mTurn = new Turn();
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -75,10 +79,10 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
-/*     // schedule the autonomous command (example)
-    if (m_autonomousCommand != null) {
+   // schedule the autonomous command (example)
+   /*  if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
-    } */
+    }  */
 
     mAutoTimer.autoRelativeTimeControl(); //inicializar el timeStap relativo a auto
 
@@ -87,11 +91,14 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    mAutoTimer.autoAbsoluteTimeControl(); //inicializa el timeStap absoluto
+     mAutoTimer.autoAbsoluteTimeControl(); //inicializa el timeStap absoluto
     if(mAutoTimer.getAbsoluteTimer()-mAutoTimer.getRelativeTimer()<3){
       mForwardAction.finalMoveForwardACtion();
     }
-    else mStopAction.finalStopAction();
+    else if (mAutoTimer.getAbsoluteTimer()-mAutoTimer.getRelativeTimer()<3*2) {
+      mTurn.turnAction(-1); //esto va pa la izquierda 
+    }
+    mStopAction.finalStopAction(); 
   }
 
   @Override
@@ -110,6 +117,8 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     mDrive.mainDrive(mControlBoard.getYDrive(), mControlBoard.getXDrive(), mControlBoard.getTriggers(), mControlBoard.getXButtonDrive());
     mIntake.mainIntake(mControlBoard.getAButtonDrive());
+    mPiston.mainPiston(mControlBoard.getBButtonDrive());
+
   }
 
   @Override

@@ -42,6 +42,10 @@ public class ControlBoard extends SubsystemBase {
     return mController1.getRawButton(Constants.AButton);
   }
 
+  public boolean getBButtonDrive(){
+    return mController1.getRawButton(Constants.BButton);
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run

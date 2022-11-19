@@ -62,10 +62,10 @@ public class Drive extends SubsystemBase {
     }
 
     if(absMove != 0){ //funcion que implementa la rampa
-      final_right_front_demand = speedTramp(absMove, final_right_front_demand);
-      final_right_back_demand = speedTramp(absMove, final_right_back_demand);
-      final_left_front_demand = speedTramp(-absMove, final_left_front_demand);
-      final_left_back_demand = speedTramp(-absMove, final_left_back_demand);     
+      final_right_front_demand = direction * speedTramp(absMove, final_right_front_demand);
+      final_right_back_demand = direction * speedTramp(absMove, final_right_back_demand);
+      final_left_front_demand = direction * speedTramp(-absMove, final_left_front_demand);
+      final_left_back_demand = direction * speedTramp(-absMove, final_left_back_demand);     
     }
     else{
       final_right_front_demand = direction * speedTramp(rightPwm, final_right_front_demand);
