@@ -8,10 +8,11 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.auto.actions.GetTimeAction;
-import frc.robot.auto.actions.MoveForwardAction;
+import frc.robot.auto.actions.MoveAction;
 import frc.robot.auto.actions.StopAction;
-import frc.robot.auto.actions.Turn;
+import frc.robot.auto.actions.TurnAction;
 import frc.robot.auto.modes.Test1;
+import frc.robot.subsystems.Alas;
 import frc.robot.subsystems.ControlBoard;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Intake;
@@ -31,14 +32,15 @@ public class Robot extends TimedRobot {
   Drive mDrive = new Drive();
   Intake mIntake = new Intake();
   Piston mPiston = new Piston();
+  Alas mAlas = new Alas();
   private RobotContainer m_robotContainer;
 
  //Autonomo
   GetTimeAction mAutoTimer = new GetTimeAction();
-  MoveForwardAction mForwardAction = new MoveForwardAction();
+  MoveAction mMoveAction = new MoveAction();
   StopAction mStopAction = new StopAction();
   Test1 mTest1Mode = new Test1();
-  Turn mTurn = new Turn();
+  TurnAction mTurn = new TurnAction();
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -93,10 +95,10 @@ public class Robot extends TimedRobot {
   public void autonomousPeriodic() {
      mAutoTimer.autoAbsoluteTimeControl(); //inicializa el timeStap absoluto
     if(mAutoTimer.getAbsoluteTimer()-mAutoTimer.getRelativeTimer()<3){
-      mForwardAction.finalMoveForwardACtion();
+      mMoveAction.finalMoveAction(1, 0.3);
     }
     else if (mAutoTimer.getAbsoluteTimer()-mAutoTimer.getRelativeTimer()<3*2) {
-      mTurn.turnAction(-1); //esto va pa la izquierda 
+      mTurn.turnAction(-1, 0.3); //esto va pa la izquierda 
     }
     mStopAction.finalStopAction(); 
   }
@@ -117,7 +119,7 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     mDrive.mainDrive(mControlBoard.getYDrive(), mControlBoard.getXDrive(), mControlBoard.getTriggers(), mControlBoard.getXButtonDrive());
     mIntake.mainIntake(mControlBoard.getAButtonDrive());
-    mPiston.mainPiston(mControlBoard.getBButtonDrive());
+    mAlas.bajarAlas(mControlBoard.getBButtonDrive());
 
   }
 

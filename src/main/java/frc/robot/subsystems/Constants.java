@@ -45,5 +45,7 @@ public class Constants {
 
     //Piston
     public static final int kPistonId = 0;
+    public static final int kAlaLeft = 1;
+    public static final int kAlaRight = 2;
 
 }
