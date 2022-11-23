@@ -22,6 +22,10 @@ public class Intake extends SubsystemBase {
     } 
   }
 
+  public void autoIntake(double autoSpeed){
+    motorIntake.set(ControlMode.PercentOutput, autoSpeed);
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
