@@ -48,4 +48,11 @@ public class Constants {
     public static final int kAlaLeft = 1;
     public static final int kAlaRight = 2;
 
+    //Caja
+    public static final int kMotorCaja1Id = Talon5;
+    public static final int kMotorCaja2Id = Talon6;
+
+    //Hopper
+    public static final int kHopper1Id = Talon7;
+    public static final int kHopper2Id = Talon8;
 }

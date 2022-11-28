@@ -5,25 +5,23 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class Intake extends SubsystemBase {
+public class Hopper extends SubsystemBase {
   //Hardware ----------------------------------------------------------------->
-  public final TalonSRX motorIntake = new TalonSRX(Constants.kIntakeId); 
+  public final TalonSRX motor1 = new TalonSRX(Constants.kHopper1Id); 
+  public final TalonSRX motor2 = new TalonSRX(Constants.kHopper2Id); 
     
-  public Intake() {} //constructor del subsistema
+  public Hopper() {} //constructor del subsistema
 
   //------------------// Funciones del subsistema //-------------------------------//
 
-  public void mainIntake(double active){ 
-    if(active > 0.15 ){ 
-        motorIntake.set(ControlMode.PercentOutput, Constants.kIntakeDemand);
-    }
-    else{
-        motorIntake.set(ControlMode.PercentOutput, 0);
-    } 
+  public void mainHopper(double potencia){ 
+    motor1.set(ControlMode.PercentOutput, potencia);
+    motor2.set(ControlMode.PercentOutput, -potencia);
   }
 
-  public void autoIntake(double autoSpeed){
-    motorIntake.set(ControlMode.PercentOutput, autoSpeed);
+  public void autoHopper(double autoSpeed){
+    motor1.set(ControlMode.PercentOutput, autoSpeed);
+    motor2.set(ControlMode.PercentOutput, -autoSpeed);
   }
 
   @Override
