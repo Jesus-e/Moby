@@ -6,8 +6,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class ControlBoard extends SubsystemBase {
 
   //Hardware ----------------------------------------------------------------->
-  public final XboxController mController1 = new XboxController(Constants.Control1Id); //declaración del control dentro del puerto
-  public final XboxController mController2 = new XboxController(Constants.Control2Id); 
+  public final XboxController mController1 = new XboxController(Constants.Control1Id); //manejador declaración del control dentro del puerto
+  public final XboxController mController2 = new XboxController(Constants.Control2Id); //mecanismos
 
   //INPUTS ------------------------------------------------------------------>
 
@@ -22,6 +22,7 @@ public class ControlBoard extends SubsystemBase {
 
   //funcion principal de Drive con argumentos de entrada de controles
 
+  //driver driver
   public double getYDrive(){
       return mController1.getRawAxis(Constants.LeftYAxis); 
   }
@@ -46,6 +47,18 @@ public class ControlBoard extends SubsystemBase {
     return mController1.getRawButton(Constants.BButton);
   }
 
+  //mecanismos
+  public double getYLeftMecanismos(){
+    return mController2.getRawAxis(Constants.LeftYAxis); 
+}
+
+public double getYRightMecanismos(){
+  return mController2.getRawAxis(Constants.RightYAxis); 
+}
+
+public double getRightTriggerMecanismos(){
+  return mController2.getRawAxis(Constants.RightTrigger); 
+}
   @Override
   public void periodic() {
     // This method will be called once per scheduler run

@@ -53,12 +53,12 @@ public class Drive extends SubsystemBase {
     absMove = inDirectThrottle*Constants.kDriveSensitivity; //valor de absMove con sensibilidad del control
 
     if(xSpeed>=0){
-      leftPwm = ((xSpeed) - ySpeed)*Constants.kDriveSensitivity; //sensibilidad del control agregada
-      rightPwm = ((xSpeed) + ySpeed)*Constants.kDriveSensitivity;
+      leftPwm = ((xSpeed) + (direction * ySpeed))*Constants.kDriveSensitivity; //sensibilidad del control agregada
+      rightPwm = ((xSpeed) - (direction * ySpeed))*Constants.kDriveSensitivity;
     }
     else{
-      leftPwm = ((xSpeed) + ySpeed)*Constants.kDriveSensitivity;
-      rightPwm = ((xSpeed) - ySpeed)*Constants.kDriveSensitivity;
+      leftPwm = ((xSpeed) - (direction * ySpeed))*Constants.kDriveSensitivity;
+      rightPwm = ((xSpeed) + (direction * ySpeed))*Constants.kDriveSensitivity;
     }
 
     if(absMove != 0){ //funcion que implementa la rampa
@@ -68,10 +68,10 @@ public class Drive extends SubsystemBase {
       final_left_back_demand = direction * speedTramp(-absMove, final_left_back_demand);     
     }
     else{
-      final_right_front_demand = direction * speedTramp(rightPwm, final_right_front_demand);
-      final_right_back_demand = direction * speedTramp(rightPwm, final_right_back_demand);
-      final_left_front_demand = direction * speedTramp(-leftPwm, final_left_front_demand);
-      final_left_back_demand = direction * speedTramp(-leftPwm, final_left_back_demand);
+      final_right_front_demand =  direction * speedTramp(rightPwm, final_right_front_demand);
+      final_right_back_demand =  direction * speedTramp(rightPwm, final_right_back_demand);
+      final_left_front_demand =  direction * speedTramp(-leftPwm, final_left_front_demand);
+      final_left_back_demand =  direction * speedTramp(-leftPwm, final_left_back_demand);
     }
 
     outMotores(); //llamado de la funcion de salida de motores
