@@ -17,6 +17,8 @@ import frc.robot.subsystems.ControlBoard;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Piston;
+import frc.robot.subsystems.Caja;
+import frc.robot.subsystems.Hopper;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -33,6 +35,8 @@ public class Robot extends TimedRobot {
   Intake mIntake = new Intake();
   Piston mPiston = new Piston();
   Alas mAlas = new Alas();
+  Caja mCaja = new Caja();
+  Hopper mHopper = new Hopper();
   private RobotContainer m_robotContainer;
 
  //Autonomo
@@ -118,8 +122,10 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     mDrive.mainDrive(mControlBoard.getYDrive(), mControlBoard.getXDrive(), mControlBoard.getTriggers(), mControlBoard.getXButtonDrive());
-    mIntake.mainIntake(mControlBoard.getAButtonDrive());
-    mAlas.bajarAlas(mControlBoard.getBButtonDrive());
+    mIntake.mainIntake(mControlBoard.getRightTriggerMecanismos());
+    //mAlas.bajarAlas(mControlBoard.getBButtonDrive());
+    mCaja.mainCaja(mControlBoard.getYLeftMecanismos());
+    mHopper.mainHopper(mControlBoard.getYRightMecanismos());
 
   }
 

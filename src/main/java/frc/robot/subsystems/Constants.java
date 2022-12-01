@@ -21,7 +21,7 @@ public class Constants {
 
 
     //Talons
-    public static final int Talon0 = 10; //1, 6, 8, 9, 10, 2, 3, 4, 5
+    public static final int Talon0 = 9; //1, 6, 8, 9, 2, 3, 4, 5
     public static final int Talon1 = 1;
     public static final int Talon2 = 2;
     public static final int Talon3 = 3;
@@ -29,15 +29,16 @@ public class Constants {
     public static final int Talon5 = 5;
     public static final int Talon6 = 6;
     public static final int Talon7 = 8;
-    public static final int Talon8 = 9;
+    public static final int Talon8 = 10;
 
     //Drive
     public static final double kDriveRampDeltaSpeed = 0.1;
-    public static final double kDriveSensitivity = 0.5;
-    public static final int kDriveRightFrontId = Talon0;
-    public static final int kDriveLeftFrontId = Talon1;
-    public static final int kDriveRightBackId = Talon2;
-    public static final int kDriveLeftBackId = Talon3;
+    public static final double kDriveSensitivity = 0.3;
+    public static final int kDriveRightFrontId = Talon3;
+    public static final int kDriveLeftFrontId = Talon2;
+    public static final int kDriveRightBackId = Talon1;
+    public static final int kDriveLeftBackId = Talon0;
+    
 
     //Intake
     public static final int kIntakeId = Talon4;
@@ -48,4 +49,11 @@ public class Constants {
     public static final int kAlaLeft = 1;
     public static final int kAlaRight = 2;
 
+    //Caja
+    public static final int kMotorCaja1Id = Talon5;
+    public static final int kMotorCaja2Id = Talon6;
+
+    //Hopper
+    public static final int kHopper1Id = Talon7;
+    public static final int kHopper2Id = Talon8;
 }

@@ -26,6 +26,19 @@ public class Alas extends SubsystemBase {
     }
   }
 
+  public void alaIzquierda(boolean bajar){
+    if(bajar){
+      SolenoidLeft.set(true);
+    }
+  }
+
+  public void alaDerecha(boolean bajar){
+    if(bajar){
+      SolenoidRight.set(true);
+    }
+  }
+
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
