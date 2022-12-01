@@ -35,9 +35,9 @@ public class Constants {
     public static final double kDriveRampDeltaSpeed = 0.1;
     public static final double kDriveSensitivity = 0.3;
     public static final int kDriveRightFrontId = Talon3;
-    public static final int kDriveLeftFrontId = Talon0;
+    public static final int kDriveLeftFrontId = Talon2;
     public static final int kDriveRightBackId = Talon1;
-    public static final int kDriveLeftBackId = Talon2;
+    public static final int kDriveLeftBackId = Talon0;
     
 
     //Intake
