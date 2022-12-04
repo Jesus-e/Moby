@@ -32,8 +32,8 @@ public class Constants {
     public static final int Talon8 = 10;
 
     //Drive
-    public static final double kDriveRampDeltaSpeed = 0.1;
-    public static final double kDriveSensitivity = 0.3;
+    public static final double kDriveRampDeltaSpeed = 0.2;
+    public static final double kDriveSensitivity = 0.7;
     public static final int kDriveRightFrontId = Talon3;
     public static final int kDriveLeftFrontId = Talon2;
     public static final int kDriveRightBackId = Talon1;
@@ -50,8 +50,9 @@ public class Constants {
     public static final int kAlaRight = 2;
 
     //Caja
-    public static final int kMotorCaja1Id = Talon5;
-    public static final int kMotorCaja2Id = Talon6;
+    public static final int kMotorCaja1Id = Talon4;
+    public static final int kMotorCaja2Id = Talon5;
+    public static final double kCajaSensitivity = 0.5;
 
     //Hopper
     public static final int kHopper1Id = Talon7;

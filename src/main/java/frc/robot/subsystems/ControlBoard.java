@@ -32,7 +32,7 @@ public class ControlBoard extends SubsystemBase {
   }
 
   public double getTriggers(){
-        return mController1.getRawAxis(Constants.RightTrigger) - mController1.getRawAxis(Constants.LeftTrigger); 
+        return mController1.getRawAxis(Constants.LeftTrigger) - mController1.getRawAxis(Constants.RightTrigger); 
   }
 
   public boolean getXButtonDrive(){

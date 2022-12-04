@@ -15,13 +15,13 @@ public class Caja extends SubsystemBase {
   //------------------// Funciones del subsistema //-------------------------------//
 
   public void mainCaja(double potencia){ 
-    motor1.set(ControlMode.PercentOutput, potencia);
-    motor2.set(ControlMode.PercentOutput, -potencia);
+    motor1.set(ControlMode.PercentOutput, -potencia*Constants.kCajaSensitivity);
+    motor2.set(ControlMode.PercentOutput, potencia*Constants.kCajaSensitivity);
   }
 
   public void autoCaja(double autoSpeed){
-    motor1.set(ControlMode.PercentOutput, autoSpeed);
-    motor2.set(ControlMode.PercentOutput, -autoSpeed);
+    motor1.set(ControlMode.PercentOutput, -autoSpeed);
+    motor2.set(ControlMode.PercentOutput, autoSpeed);
   }
 
   @Override

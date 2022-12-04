@@ -4,9 +4,11 @@
 
 package frc.robot;
 
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.auto.actions.CajaAction;
 import frc.robot.auto.actions.GetTimeAction;
 import frc.robot.auto.actions.MoveAction;
 import frc.robot.auto.actions.StopAction;
@@ -45,6 +47,7 @@ public class Robot extends TimedRobot {
   StopAction mStopAction = new StopAction();
   Test1 mTest1Mode = new Test1();
   TurnAction mTurn = new TurnAction();
+  CajaAction mCajaAction = new CajaAction();
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -55,6 +58,7 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+    CameraServer.startAutomaticCapture();
   }
 
   /**
@@ -98,13 +102,15 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {
      mAutoTimer.autoAbsoluteTimeControl(); //inicializa el timeStap absoluto
-    if(mAutoTimer.getAbsoluteTimer()-mAutoTimer.getRelativeTimer()<3){
+    if(mAutoTimer.getAbsoluteTimer()-mAutoTimer.getRelativeTimer()<2){
       mMoveAction.finalMoveAction(1, 0.3);
     }
-    else if (mAutoTimer.getAbsoluteTimer()-mAutoTimer.getRelativeTimer()<3*2) {
-      mTurn.turnAction(-1, 0.3); //esto va pa la izquierda 
+    else if(mAutoTimer.getAbsoluteTimer()-mAutoTimer.getRelativeTimer()<3){
+      mCajaAction.autoCajaAction(0.5);
     }
+    else
     mStopAction.finalStopAction(); 
+    mCajaAction.autoCajaAction(0);
   }
 
   @Override
@@ -122,10 +128,11 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     mDrive.mainDrive(mControlBoard.getYDrive(), mControlBoard.getXDrive(), mControlBoard.getTriggers(), mControlBoard.getXButtonDrive());
-    mIntake.mainIntake(mControlBoard.getRightTriggerMecanismos());
+    //mIntake.mainIntake(mControlBoard.getRightTriggerMecanismos());
     //mAlas.bajarAlas(mControlBoard.getBButtonDrive());
     mCaja.mainCaja(mControlBoard.getYLeftMecanismos());
-    mHopper.mainHopper(mControlBoard.getYRightMecanismos());
+    mCajaAction.autoCajaAction(0.3);
+    //mHopper.mainHopper(mControlBoard.getYRightMecanismos());
 
   }
 
