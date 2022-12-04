@@ -26,8 +26,9 @@ public class Drive extends SubsystemBase {
     
   //Logic ----------------------------------------------------------------->
   boolean rampActive = true;
-  double leftPwm = 0;
-  double rightPwm = 0;
+  double leftPow = 0;
+  double rightPow = 0;
+  double max = 0;
 
   int direction;
   boolean toggleOn = false;
@@ -39,39 +40,65 @@ public class Drive extends SubsystemBase {
 
   //funcion principal de Drive con argumentos de entrada de controles
   public void mainDrive(double xInSpeed, double yInSpeed, double inDirectThrottle, boolean frontChange){
+    xSpeed = xInSpeed; //raw axis 4, el movimiento horizontal del joystick derecho
+    ySpeed = -yInSpeed; //raw axis 1, el movimiento vertical del joystick izquierdo, invertirle el signo porque adelante en el control por alguna razón es -1
+    absMove = inDirectThrottle*Constants.kDriveSensitivity; //diferencia de los triggers, derecho avanza, izquierdo retrocede
+    
+    //checar cual (si x o y) valor es mayor
+    max = Math.abs(ySpeed);
+    if(Math.abs(xSpeed) > max){
+      max = Math.abs(xSpeed);
+    }
 
+    //actualizar el frente cada que le piques al boton
     updateToggle(frontChange);
-
     if(toggleOn){
-        direction = 1;
-    }else{
         direction = -1;
+    }else{
+        direction = 1;
     }
 
-    xSpeed = xInSpeed;
-    ySpeed = yInSpeed;
-    absMove = inDirectThrottle*Constants.kDriveSensitivity; //valor de absMove con sensibilidad del control
+    //actualizar la direccion de acuerdo a cual es el frente
+    xSpeed = direction * xSpeed;
+    ySpeed = direction * ySpeed;
+
     //fe
-    if(xSpeed<=0){
-      leftPwm = ((xSpeed) - (ySpeed))*Constants.kDriveSensitivity; //sensibilidad del control agregada
-      rightPwm = ((xSpeed) + (ySpeed))*Constants.kDriveSensitivity;
+    //checa si la velocidad en y es mayor a 0, quieres ir "adelante"
+    if(ySpeed >= 0){
+      //checha si quieres girar "a la derecha", en sentido horario
+      if(xSpeed >= 0){
+        rightPow = ((ySpeed) - (xSpeed))*Constants.kDriveSensitivity;
+        leftPow = max*Constants.kDriveSensitivity;
+      }
+      //entonces estas girando a la izquierda
+      else{
+      rightPow = max*Constants.kDriveSensitivity;
+      leftPow = ((ySpeed) + (xSpeed))*Constants.kDriveSensitivity; 
+      }
     }
+    //entonces quieres ir "atras"
     else{
-      leftPwm = ((xSpeed) + (ySpeed))*Constants.kDriveSensitivity;
-      rightPwm = ((xSpeed) - (ySpeed))*Constants.kDriveSensitivity;
+      if(xSpeed >= 0){
+        rightPow = (-max)*Constants.kDriveSensitivity;
+        leftPow = ((ySpeed) + (xSpeed))*Constants.kDriveSensitivity; 
+      }
+      rightPow = ((xSpeed) - (ySpeed))*Constants.kDriveSensitivity;
+      leftPow = (-max)*Constants.kDriveSensitivity;
     }
 
-    if(absMove != 0){ //funcion que implementa la rampa
+    //checa si no le estas dando con los triggers y ponle la rampa de velocidad
+    //A los motores de la izquieda invierteles el signo, porque todos los calculos los hiciste como si los motores tuvieran la misma orientacion
+    if(absMove != 0){ 
       final_right_front_demand = speedTramp(absMove, final_right_front_demand);
       final_right_back_demand = speedTramp(absMove, final_right_back_demand);
       final_left_front_demand = speedTramp(-absMove, final_left_front_demand);
       final_left_back_demand = speedTramp(-absMove, final_left_back_demand);     
     }
     else{
-      final_right_front_demand =  speedTramp(rightPwm, final_right_front_demand);
-      final_right_back_demand =  speedTramp(rightPwm, final_right_back_demand);
-      final_left_front_demand =  speedTramp(-leftPwm, final_left_front_demand);
-      final_left_back_demand =  speedTramp(-leftPwm, final_left_back_demand);
+      final_right_front_demand =  speedTramp(rightPow, final_right_front_demand);
+      final_right_back_demand =  speedTramp(rightPow, final_right_back_demand);
+      final_left_front_demand =  speedTramp(-leftPow, final_left_front_demand);
+      final_left_back_demand =  speedTramp(-leftPow, final_left_back_demand);
     }
 
     outMotores(); //llamado de la funcion de salida de motores

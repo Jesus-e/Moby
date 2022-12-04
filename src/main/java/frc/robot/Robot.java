@@ -127,7 +127,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    mDrive.mainDrive(mControlBoard.getYDrive(), mControlBoard.getXDrive(), mControlBoard.getTriggers(), mControlBoard.getXButtonDrive());
+    mDrive.mainDrive(mControlBoard.getXDrive(), mControlBoard.getYDrive(), mControlBoard.getTriggers(), mControlBoard.getXButtonDrive());
     //mIntake.mainIntake(mControlBoard.getRightTriggerMecanismos());
     //mAlas.bajarAlas(mControlBoard.getBButtonDrive());
     mCaja.mainCaja(mControlBoard.getYLeftMecanismos());
