@@ -12,6 +12,7 @@ public class Constants {
     public static final int RightTrigger = 3;
     public static final int RightXAxis = 4;
     public static final int RightYAxis = 5;
+    public static final int RB = 6;
     //Botones
     public static final int AButton = 1;
     public static final int BButton = 2;
