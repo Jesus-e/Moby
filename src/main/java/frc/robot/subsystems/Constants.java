@@ -38,6 +38,9 @@ public class Constants {
     public static final int kDriveLeftFrontId = Talon2;
     public static final int kDriveRightBackId = Talon1;
     public static final int kDriveLeftBackId = Talon0;
+    //Pruebas
+    public static double gain = 0.7;
+    public static double another_gain = 0.7;
     
 
     //Intake

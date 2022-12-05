@@ -17,6 +17,13 @@ public class Drive extends SubsystemBase {
   double xSpeed = 0;
   double ySpeed = 0;
   double absMove = 0;  
+
+  double throttle = 0;
+  double turn = 0;
+  double giroMismoEje = 0;
+
+  double temp_leftPwm = 0;
+  double temp_rightPwm = 0;
     
   //OUTPUTS ----------------------------------------------------------------->
   double final_left_front_demand = 0;
@@ -26,9 +33,8 @@ public class Drive extends SubsystemBase {
     
   //Logic ----------------------------------------------------------------->
   boolean rampActive = true;
-  double leftPow = 0;
-  double rightPow = 0;
-  double max = 0;
+  double leftPwm = 0;
+  double rightPwm = 0;
 
   int direction;
   boolean toggleOn = false;
@@ -38,67 +44,138 @@ public class Drive extends SubsystemBase {
 
   //------------------// Funciones del subsistema //-------------------------------//
 
-  //funcion principal de Drive con argumentos de entrada de controles
-  public void mainDrive(double xInSpeed, double yInSpeed, double inDirectThrottle, boolean frontChange){
-    xSpeed = xInSpeed; //raw axis 4, el movimiento horizontal del joystick derecho
-    ySpeed = -yInSpeed; //raw axis 1, el movimiento vertical del joystick izquierdo, invertirle el signo porque adelante en el control por alguna razón es -1
-    absMove = inDirectThrottle*Constants.kDriveSensitivity; //diferencia de los triggers, derecho avanza, izquierdo retrocede
-    
-    //checar cual (si x o y) valor es mayor
-    max = Math.abs(ySpeed);
-    if(Math.abs(xSpeed) > max){
-      max = Math.abs(xSpeed);
-    }
+  //-------------------------------------------------------------------------------------------------
+  public void comoAtom(double xInSpeed, double yInSpeed, double inDirectThrottle){
+    xSpeed = xInSpeed;
+    ySpeed = yInSpeed;
+    absMove = inDirectThrottle*Constants.kDriveSensitivity; //valor de absMove con sensibilidad del control
 
-    //actualizar el frente cada que le piques al boton
-    updateToggle(frontChange);
-    if(toggleOn){
-        direction = -1;
-    }else{
-        direction = 1;
+    if(xSpeed>=0){
+      leftPwm = ((xSpeed) - ySpeed)*Constants.kDriveSensitivity; //sensibilidad del control agregada
+      rightPwm = ((xSpeed) + ySpeed)*Constants.kDriveSensitivity;
     }
-
-    //actualizar la direccion de acuerdo a cual es el frente
-    xSpeed = direction * xSpeed;
-    ySpeed = direction * ySpeed;
-
-    //fe
-    //checa si la velocidad en y es mayor a 0, quieres ir "adelante"
-    if(ySpeed >= 0){
-      //checha si quieres girar "a la derecha", en sentido horario
-      if(xSpeed >= 0){
-        rightPow = ((ySpeed) - (xSpeed))*Constants.kDriveSensitivity;
-        leftPow = max*Constants.kDriveSensitivity;
-      }
-      //entonces estas girando a la izquierda
-      else{
-      rightPow = max*Constants.kDriveSensitivity;
-      leftPow = ((ySpeed) + (xSpeed))*Constants.kDriveSensitivity; 
-      }
-    }
-    //entonces quieres ir "atras"
     else{
-      if(xSpeed >= 0){
-        rightPow = (-max)*Constants.kDriveSensitivity;
-        leftPow = ((ySpeed) + (xSpeed))*Constants.kDriveSensitivity; 
-      }
-      rightPow = ((xSpeed) - (ySpeed))*Constants.kDriveSensitivity;
-      leftPow = (-max)*Constants.kDriveSensitivity;
+      leftPwm = ((xSpeed) + ySpeed)*Constants.kDriveSensitivity;
+      rightPwm = ((xSpeed) - ySpeed)*Constants.kDriveSensitivity;
     }
+    
 
-    //checa si no le estas dando con los triggers y ponle la rampa de velocidad
-    //A los motores de la izquieda invierteles el signo, porque todos los calculos los hiciste como si los motores tuvieran la misma orientacion
-    if(absMove != 0){ 
+    if(absMove != 0){ //funcion que implementa la rampa
       final_right_front_demand = speedTramp(absMove, final_right_front_demand);
       final_right_back_demand = speedTramp(absMove, final_right_back_demand);
       final_left_front_demand = speedTramp(-absMove, final_left_front_demand);
       final_left_back_demand = speedTramp(-absMove, final_left_back_demand);     
     }
     else{
-      final_right_front_demand =  speedTramp(rightPow, final_right_front_demand);
-      final_right_back_demand =  speedTramp(rightPow, final_right_back_demand);
-      final_left_front_demand =  speedTramp(-leftPow, final_left_front_demand);
-      final_left_back_demand =  speedTramp(-leftPow, final_left_back_demand);
+      final_right_front_demand = speedTramp(rightPwm, final_right_front_demand);
+      final_right_back_demand = speedTramp(rightPwm, final_right_back_demand);
+      final_left_front_demand = speedTramp(-leftPwm, final_left_front_demand);
+      final_left_back_demand = speedTramp(-leftPwm, final_left_back_demand);
+    }
+
+    outMotores(); //llamado de la funcion de salida de motores
+   }
+
+  //---------------------------------------------------------------------------------------------------------
+  public void prueba1(double inThrottle, double inTurn, double inGiroMismoEje){
+    
+    throttle = inThrottle;
+    turn = inTurn;
+    giroMismoEje = inGiroMismoEje*Constants.kDriveSensitivity; //valor de giroMismoEje con sensibilidad del control
+    
+    //checa si estas avanzando
+    if(throttle != 0){
+      if(throttle>=0){
+        leftPwm = ((throttle) - turn)*Constants.kDriveSensitivity; //sensibilidad del control agregada
+        rightPwm = ((throttle) + turn)*Constants.kDriveSensitivity;
+      }
+      else{
+        leftPwm = ((throttle) + turn)*Constants.kDriveSensitivity;
+        rightPwm = ((throttle) - turn)*Constants.kDriveSensitivity;
+      }
+    }
+    //o solo girando
+    else{
+      leftPwm = giroMismoEje;
+      rightPwm = giroMismoEje;
+    }
+
+    //rampa de velocidad
+    final_right_front_demand = speedTramp(rightPwm, final_right_front_demand);
+    final_right_back_demand = speedTramp(rightPwm, final_right_back_demand);
+    final_left_front_demand = speedTramp(-leftPwm, final_left_front_demand);
+    final_left_back_demand = speedTramp(-leftPwm, final_left_back_demand);   
+
+    outMotores();
+  }
+  
+  //---------------------------------------------------------------------------------------------------------
+  double skim(double v) {
+    // gain determines how much to skim off the top
+    if (v > 1.0)
+      return -((v - 1.0) * Constants.gain);
+    else if (v < -1.0)
+      return -((v + 1.0) * Constants.gain);
+    return 0;
+  }
+
+  public void prueba2 (double throttle, double turn, boolean turnButton){
+    //si no estas picando el boton de girar en tu eje, multiplica el giro por la velocidad para ajustarlo
+    //si si lo estas picando no lo hace porque al multiplicar por 0 no giraría en su lugar
+    if (!turnButton)
+    turn = turn * (Constants.another_gain * Math.abs(throttle));
+    
+    temp_leftPwm = throttle + turn;
+    temp_rightPwm = throttle - turn;
+    
+    leftPwm = temp_leftPwm + skim(temp_rightPwm);
+    rightPwm = temp_rightPwm + skim(temp_leftPwm);
+
+    //rampa de velocidad
+    final_right_front_demand = speedTramp(rightPwm, final_right_front_demand);
+    final_right_back_demand = speedTramp(rightPwm, final_right_back_demand);
+    final_left_front_demand = speedTramp(-leftPwm, final_left_front_demand);
+    final_left_back_demand = speedTramp(-leftPwm, final_left_back_demand);   
+
+    outMotores();
+  }
+  
+  //--------------------------------------------------------------------------------------------------
+  //funcion principal de Drive con argumentos de entrada de controles, la que hemos estado usando
+  public void mainDrive(double xInSpeed, double yInSpeed, double inDirectThrottle, boolean frontChange){
+
+    updateToggle(frontChange);
+
+    if(toggleOn){
+        direction = 1;
+    }else{
+        direction = -1;
+    }
+
+    xSpeed = xInSpeed;
+    ySpeed = yInSpeed;
+    absMove = inDirectThrottle*Constants.kDriveSensitivity; //valor de absMove con sensibilidad del control
+    //fe
+    if(xSpeed<=0){
+      leftPwm = ((xSpeed) - (ySpeed))*Constants.kDriveSensitivity; //sensibilidad del control agregada
+      rightPwm = ((xSpeed) + (ySpeed))*Constants.kDriveSensitivity;
+    }
+    else{
+      leftPwm = ((xSpeed) + (ySpeed))*Constants.kDriveSensitivity;
+      rightPwm = ((xSpeed) - (ySpeed))*Constants.kDriveSensitivity;
+    }
+
+    if(absMove != 0){ //funcion que implementa la rampa
+      final_right_front_demand = speedTramp(absMove, final_right_front_demand);
+      final_right_back_demand = speedTramp(absMove, final_right_back_demand);
+      final_left_front_demand = speedTramp(-absMove, final_left_front_demand);
+      final_left_back_demand = speedTramp(-absMove, final_left_back_demand);     
+    }
+    else{
+      final_right_front_demand =  speedTramp(rightPwm, final_right_front_demand);
+      final_right_back_demand =  speedTramp(rightPwm, final_right_back_demand);
+      final_left_front_demand =  speedTramp(-leftPwm, final_left_front_demand);
+      final_left_back_demand =  speedTramp(-leftPwm, final_left_back_demand);
     }
 
     outMotores(); //llamado de la funcion de salida de motores

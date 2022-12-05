@@ -127,11 +127,18 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    mDrive.mainDrive(mControlBoard.getXDrive(), mControlBoard.getYDrive(), mControlBoard.getTriggers(), mControlBoard.getXButtonDrive());
+
+
+    //probar funciones de drive, comentar las que no se esten probando
+    mDrive.mainDrive(mControlBoard.getXDrive(), mControlBoard.getYDrive(), mControlBoard.getTriggers(), mControlBoard.getXButtonDrive()); //con la que han estado practicando
+    mDrive.comoAtom(mControlBoard.getYDrive(), mControlBoard.getXDrive(), mControlBoard.getTriggersAtom()); //copiada el repositorio de atom
+    mDrive.prueba1(mControlBoard.getTriggersAtom(), mControlBoard.getXLeftDrive(), mControlBoard.getXDrive()); //avanzas con triggers, giras moviendote con joystick izquierdo, giras en tu eje con joystick derecho
+    mDrive.prueba2(-mControlBoard.getYDrive(), mControlBoard.getXDrive(), mControlBoard.getAButtonDrive()); //avanzas y giras con los sticks, si quieres girar en tu eje pica A
+    
     //mIntake.mainIntake(mControlBoard.getRightTriggerMecanismos());
     //mAlas.bajarAlas(mControlBoard.getBButtonDrive());
     mCaja.mainCaja(mControlBoard.getYLeftMecanismos());
-    mCajaAction.autoCajaAction(0.3);
+    //mCajaAction.autoCajaAction(0.3);
     //mHopper.mainHopper(mControlBoard.getYRightMecanismos());
 
   }

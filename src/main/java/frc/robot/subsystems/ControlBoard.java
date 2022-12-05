@@ -27,9 +27,17 @@ public class ControlBoard extends SubsystemBase {
       return mController1.getRawAxis(Constants.LeftYAxis); 
   }
 
+  public double getXLeftDrive(){
+    return mController1.getRawAxis(Constants.LeftXAxis); 
+}
+
   public double getXDrive(){
     return mController1.getRawAxis(Constants.RightXAxis); 
   }
+
+  public double getTriggersAtom(){
+    return mController1.getRawAxis(Constants.RightTrigger) - mController1.getRawAxis(Constants.LeftTrigger); 
+}
 
   public double getTriggers(){
         return mController1.getRawAxis(Constants.LeftTrigger) - mController1.getRawAxis(Constants.RightTrigger); 
