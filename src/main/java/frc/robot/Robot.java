@@ -130,7 +130,7 @@ public class Robot extends TimedRobot {
 
 
     //probar funciones de drive, comentar las que no se esten probando
-    mDrive.mainDrive(-mControlBoard.getYDrive(), mControlBoard.getXDrive(), mControlBoard.getRBDrive(), mControlBoard.getTriggersAtom()); //avanzas y giras con los sticks, si quieres girar en tu eje pica A
+    mDrive.mainDrive(-mControlBoard.getYDrive(), mControlBoard.getXDrive(), mControlBoard.getRBDrive(), mControlBoard.getTriggersAtom(), mControlBoard.getXButtonDrive()); //avanzas y giras con los sticks, si quieres girar en tu eje pica A
     
     //mIntake.mainIntake(mControlBoard.getRightTriggerMecanismos());
     //mAlas.bajarAlas(mControlBoard.getBButtonDrive());

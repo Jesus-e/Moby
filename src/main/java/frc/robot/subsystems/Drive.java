@@ -54,12 +54,20 @@ public class Drive extends SubsystemBase {
 
   //el bueno :)
   //fe
-  public void mainDrive(double throttle, double turn, boolean turnButton, double inDirectThrottle){
+  public void mainDrive(double throttle, double turn, boolean turnButton, double inDirectThrottle, boolean frontChange){
+    updateToggle(frontChange);
+
+    if(toggleOn){
+        direction = -1;
+    }else{
+        direction = 1;
+    }
+    
     //si no estas picando el boton de girar en tu eje, multiplica el giro por la velocidad para ajustarlo
     //si si lo estas picando no lo hace porque al multiplicar por 0 no giraría en su lugar
-    temp_leftPwm = throttle - turn;
-    temp_rightPwm = throttle + turn;
-    absMove = inDirectThrottle;
+    temp_leftPwm = direction * (throttle - turn);
+    temp_rightPwm = direction * (throttle + turn);
+    absMove = direction * (inDirectThrottle);
     
     if (!turnButton){
     turn = turn * (Constants.another_gain * Math.abs(throttle));
