@@ -7,8 +7,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Caja extends SubsystemBase {
   //Hardware ----------------------------------------------------------------->
-  public final TalonSRX motor1 = new TalonSRX(Constants.kMotorCajaRightId); 
-  public final TalonSRX motor2 = new TalonSRX(Constants.kMotorCajaLeftId); 
+  public final TalonSRX motor1 = new TalonSRX(Constants.kMotorCaja1Id); 
+  public final TalonSRX motor2 = new TalonSRX(Constants.kMotorCaja2Id); 
     
   public Caja() {} //constructor del subsistema
 

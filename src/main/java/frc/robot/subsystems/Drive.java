@@ -65,9 +65,9 @@ public class Drive extends SubsystemBase {
     
     //si no estas picando el boton de girar en tu eje, multiplica el giro por la velocidad para ajustarlo
     //si si lo estas picando no lo hace porque al multiplicar por 0 no giraría en su lugar
-    temp_leftPwm = (throttle - (direction * turn));
-    temp_rightPwm = (throttle + (direction * turn));
-    absMove = (inDirectThrottle);
+    temp_leftPwm = direction * (throttle - turn);
+    temp_rightPwm = direction * (throttle + turn);
+    absMove = direction * (inDirectThrottle);
     
     if (!turnButton){
     turn = turn * (Constants.another_gain * Math.abs(throttle));
@@ -86,8 +86,8 @@ public class Drive extends SubsystemBase {
       //rampa de velocidad
       final_right_front_demand = speedTramp(rightPwm, final_right_front_demand);
       final_right_back_demand = speedTramp(rightPwm, final_right_back_demand);
-      final_left_front_demand = speedTramp((-leftPwm), final_left_front_demand);
-      final_left_back_demand = speedTramp((-leftPwm), final_left_back_demand); 
+      final_left_front_demand = speedTramp(-leftPwm, final_left_front_demand);
+      final_left_back_demand = speedTramp(-leftPwm, final_left_back_demand); 
     }  
 
     outMotores();
@@ -113,7 +113,6 @@ public class Drive extends SubsystemBase {
   //Funcion para poner salidas a SmartDashBoard 
   public void DriveLogsOutput(){
     SmartDashboard.putNumber("Direct Throttle", absMove);
-    SmartDashboard.putNumber("Direction", direction);
   }
 
   //Funcion para actualizar el toggle
