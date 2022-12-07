@@ -46,7 +46,7 @@ public class Robot extends TimedRobot {
   MoveAction mMoveAction = new MoveAction();
   StopAction mStopAction = new StopAction();
   Test1 mTest1Mode = new Test1();
-  TurnAction mTurn = new TurnAction();
+  TurnAction mTurnAction = new TurnAction();
   CajaAction mCajaAction = new CajaAction();
 
   /**
@@ -101,17 +101,37 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-     mAutoTimer.autoAbsoluteTimeControl(); //inicializa el timeStap absoluto
-    if(mAutoTimer.getAbsoluteTimer()-mAutoTimer.getRelativeTimer()<2){
+    mAutoTimer.autoAbsoluteTimeControl(); //inicializa el timeStap absoluto
+    double diferencia = mAutoTimer.getAbsoluteTimer()-mAutoTimer.getRelativeTimer();
+
+    if(diferencia < 2.2){
       mMoveAction.finalMoveAction(1, 0.3);
     }
-    else if(mAutoTimer.getAbsoluteTimer()-mAutoTimer.getRelativeTimer()<3){
-      mCajaAction.autoCajaAction(0.5);
+    else if((diferencia > 2.2) && (diferencia < 2.3)){
+      mMoveAction.finalMoveAction(1, 0.3);
+      mCajaAction.autoCajaAction(0.4);
     }
-    else
+    else if((diferencia > 2.3) && (diferencia < 4)){ 
     mStopAction.finalStopAction(); 
-    mCajaAction.autoCajaAction(0);
+    mCajaAction.autoCajaAction(0.4);
   }
+  else if((diferencia > 4) && (diferencia < 4.5)){ 
+    mTurnAction.turnAction(1, 0.3);
+  }
+  else if((diferencia > 4.5) && (diferencia < 5)){ 
+    mMoveAction.finalMoveAction(1, 0.4);
+  }
+  else if((diferencia > 5) && (diferencia < 5.3)){ 
+    mStopAction.finalStopAction();
+    mCajaAction.autoCajaAction(-0.4);
+  }
+  else if((diferencia > 5.3) && (diferencia < 5.7)){ 
+    mMoveAction.finalMoveAction(-1, 0.3);
+  }
+  else{
+    mStopAction.finalStopAction();
+    mCajaAction.autoCajaAction(0);
+  }  }
 
   @Override
   public void teleopInit() {
@@ -131,6 +151,7 @@ public class Robot extends TimedRobot {
 
     //probar funciones de drive, comentar las que no se esten probando
     mDrive.mainDrive(-mControlBoard.getYDrive(), mControlBoard.getXDrive(), mControlBoard.getRBDrive(), mControlBoard.getTriggersAtom(), mControlBoard.getXButtonDrive()); //avanzas y giras con los sticks, si quieres girar en tu eje pica A
+    mDrive.DriveLogsOutput();
     
     //mIntake.mainIntake(mControlBoard.getRightTriggerMecanismos());
     //mAlas.bajarAlas(mControlBoard.getBButtonDrive());
