@@ -5,7 +5,7 @@ import frc.robot.subsystems.Hopper;
 public class HopperAction{
   Hopper mAutoHopper = new Hopper();
   
-  public void autoCajaAction(double speed){ 
+  public void autoHopperAction(double speed){ 
     mAutoHopper.autoHopper(speed);
   }
 }
