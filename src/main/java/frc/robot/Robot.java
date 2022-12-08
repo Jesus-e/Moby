@@ -5,7 +5,10 @@
 package frc.robot;
 
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.auto.actions.CajaAction;
@@ -32,6 +35,7 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   //Subsistemas
+  Compressor mCompressor = new Compressor(PneumaticsModuleType.CTREPCM);
   ControlBoard mControlBoard = new ControlBoard();
   Drive mDrive = new Drive();
   Intake mIntake = new Intake();
@@ -57,8 +61,12 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
+    mCompressor.enableDigital();
     m_robotContainer = new RobotContainer();
     CameraServer.startAutomaticCapture();
+    mPiston.Solenoid1.set(Value.kForward);
+    mPiston.Solenoid2.set(Value.kForward);
+
   }
 
   /**
@@ -153,9 +161,13 @@ public class Robot extends TimedRobot {
     mDrive.mainDrive(-mControlBoard.getYDrive(), mControlBoard.getXDrive(), mControlBoard.getRBDrive(), mControlBoard.getTriggersAtom(), mControlBoard.getXButtonDrive()); //avanzas y giras con los sticks, si quieres girar en tu eje pica A
     mDrive.DriveLogsOutput();
     
-    //mIntake.mainIntake(mControlBoard.getRightTriggerMecanismos());
+    mIntake.mainIntake(mControlBoard.getRightTriggerMecanismos());
     //mAlas.bajarAlas(mControlBoard.getBButtonDrive());
     mCaja.mainCaja(mControlBoard.getYLeftMecanismos());
+    mPiston.mainPiston(mControlBoard.getXButtonMecanismos());
+    mAlas.alaIzquierda(mControlBoard.getBButtonMecanismos());
+    mAlas.alaDerecha(mControlBoard.getYButtonMecanismos());
+    mAlas.subirAlas(mControlBoard.getLeftTriggerMecanismos());
     //mCajaAction.autoCajaAction(0.3);
     //mHopper.mainHopper(mControlBoard.getYRightMecanismos());
 

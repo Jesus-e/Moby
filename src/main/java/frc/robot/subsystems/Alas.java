@@ -1,11 +1,15 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.VictorSPXControlMode;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Alas extends SubsystemBase {
   //Hardware ----------------------------------------------------------------->
+  public VictorSPX motorRegreso = new VictorSPX(Constants.kMotorAla);
   public Solenoid SolenoidLeft = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.kAlaLeft);
   public Solenoid SolenoidRight = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.kAlaRight);
 
@@ -30,14 +34,21 @@ public class Alas extends SubsystemBase {
     if(bajar){
       SolenoidLeft.set(true);
     }
+    else     
+      SolenoidLeft.set(false);
   }
 
   public void alaDerecha(boolean bajar){
     if(bajar){
       SolenoidRight.set(true);
     }
+    else
+      SolenoidRight.set(false);
   }
 
+  public void subirAlas(double potencia){
+    motorRegreso.set(VictorSPXControlMode.PercentOutput, potencia);
+  }
 
   @Override
   public void periodic() {

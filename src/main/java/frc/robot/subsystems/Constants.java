@@ -29,7 +29,8 @@ public class Constants {
     public static final int Talon4 = 4;
     public static final int Talon5 = 5;
     public static final int Talon6 = 6;
-    public static final int Talon7 = 7;
+    //public static final int Talon7 = 7;
+    public static final int Victor7 = 7; 
     public static final int Talon8 = 8;
     public static final int Talon9 = 9; 
 
@@ -43,16 +44,21 @@ public class Constants {
     //Pruebas
     public static double gain = 0.7;
     public static double another_gain = 0.7;
-    
+
+    //Alas
+    public static final int kMotorAla = Victor7;
 
     //Intake
     public static final int kIntakeId = Talon6;
-    public static final double kIntakeDemand = 0.3;
+    public static final double kIntakeDemand = 0.65;
 
     //Piston
-    public static final int kPistonId = 0;
-    public static final int kAlaLeft = 1;
-    public static final int kAlaRight = 2;
+    public static final int kPiston1ForwardId = 0;
+    public static final int kPiston1ReverseId = 1;
+    public static final int kPiston2ForwardId = 6;
+    public static final int kPiston2ReverseId = 7;
+    public static final int kAlaLeft = 3;
+    public static final int kAlaRight = 4;
 
     //Caja
     public static final int kMotorCajaRightId = Talon2;
@@ -60,6 +66,5 @@ public class Constants {
     public static final double kCajaSensitivity = 0.5;
 
     //Hopper
-    public static final int kHopper1Id = Talon7;
-    public static final int kHopper2Id = Talon8;
+    public static final int kHopper1Id = Talon8;
 }

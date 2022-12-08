@@ -71,6 +71,27 @@ public double getYRightMecanismos(){
 public double getRightTriggerMecanismos(){
   return mController2.getRawAxis(Constants.RightTrigger); 
 }
+
+public double getLeftTriggerMecanismos(){
+  return mController2.getRawAxis(Constants.LeftTrigger); 
+}
+
+public boolean getBButtonMecanismos(){
+  return mController2.getRawButton(Constants.BButton);
+}
+
+public boolean getYButtonMecanismos(){
+  return mController2.getRawButton(Constants.YButton);
+}
+
+public boolean getXButtonMecanismos(){
+  return mController2.getRawButton(Constants.XButton);
+}
+
+public boolean getAButtonMecanismos(){
+  return mController2.getRawButton(Constants.AButton);
+}
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
