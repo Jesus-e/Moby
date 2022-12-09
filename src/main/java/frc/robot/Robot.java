@@ -61,7 +61,6 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
-    mCompressor.enableDigital();
     m_robotContainer = new RobotContainer();
     CameraServer.startAutomaticCapture();
     mPiston.Solenoid1.set(Value.kForward);
@@ -155,7 +154,9 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-
+    mCompressor.enableDigital();
+    boolean enabled = mCompressor.enabled(); //revisar estado de compresor
+    boolean pressureSwitch = mCompressor.getPressureSwitchValue(); 
 
     //probar funciones de drive, comentar las que no se esten probando
     mDrive.mainDrive(-mControlBoard.getYDrive(), mControlBoard.getXDrive(), mControlBoard.getRBDrive(), mControlBoard.getTriggersAtom(), mControlBoard.getXButtonDrive()); //avanzas y giras con los sticks, si quieres girar en tu eje pica A
