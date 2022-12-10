@@ -53,13 +53,13 @@ public class Constants {
     public static final double kIntakeDemand = 0.65;
 
     //Piston
-    public static final int kPiston1ForwardId = 0;
+    public static final int kPiston1ForwardId = 7;
     public static final int kPiston1ReverseId = 1;
     public static final int kPiston2ForwardId = 6;
-    public static final int kPiston2ReverseId = 7;
-    public static final int kAlaLeft = 3;
-    public static final int kAlaRight = 4;
-    public static final int kAlaRight2 = 4;
+    public static final int kPiston2ReverseId = 9;
+    public static final int kAlaLeft = 8;
+    public static final int kAlaRight = 2;
+    public static final int kAlaRight2 = 3;
 
     //Caja
     public static final int kMotorCajaRightId = Talon8;

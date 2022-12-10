@@ -67,8 +67,7 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
     CameraServer.startAutomaticCapture();
-    mPiston.Solenoid1.set(Value.kReverse);
-    mPiston.Solenoid2.set(Value.kReverse);
+    mAlas.alaDerecha(false);
 
   }
 
@@ -387,10 +386,9 @@ public class Robot extends TimedRobot {
     mIntake.mainIntake(mControlBoard.getTriggersMecanismos());
     //mAlas.bajarAlas(mControlBoard.getBButtonDrive());
     mCaja.mainCaja(mControlBoard.getYLeftMecanismos());
-    mPiston.mainPiston(mControlBoard.getXButtonMecanismos());
+      mPiston.mainPiston(mControlBoard.getXButtonMecanismos()); //X para gancho
     mAlas.alaIzquierda(mControlBoard.getBButtonMecanismos());
-    mAlas.alaDerecha(mControlBoard.getYButtonMecanismos());
-    mAlas.subirAlas(mControlBoard.getLeftTriggerMecanismos());
+      mAlas.alaDerecha(mControlBoard.getYButtonMecanismos());  //B para bajar ala derecha
     //mCajaAction.autoCajaAction(0.3);
     mHopper.mainHopper(mControlBoard.getYRightMecanismos());
 
