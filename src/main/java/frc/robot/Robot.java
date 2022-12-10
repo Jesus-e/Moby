@@ -13,6 +13,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.auto.actions.CajaAction;
 import frc.robot.auto.actions.GetTimeAction;
+import frc.robot.auto.actions.HopperAction;
+import frc.robot.auto.actions.IntakeAction;
 import frc.robot.auto.actions.MoveAction;
 import frc.robot.auto.actions.StopAction;
 import frc.robot.auto.actions.TurnAction;
@@ -52,6 +54,8 @@ public class Robot extends TimedRobot {
   Test1 mTest1Mode = new Test1();
   TurnAction mTurnAction = new TurnAction();
   CajaAction mCajaAction = new CajaAction();
+  IntakeAction mIntakeAction = new IntakeAction();
+  HopperAction mHopperAction = new HopperAction();
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -110,35 +114,64 @@ public class Robot extends TimedRobot {
   public void autonomousPeriodic() {
     mAutoTimer.autoAbsoluteTimeControl(); //inicializa el timeStap absoluto
     double diferencia = mAutoTimer.getAbsoluteTimer()-mAutoTimer.getRelativeTimer();
-
-    if(diferencia < 2.2){
-      mMoveAction.finalMoveAction(1, 0.3);
-    }
-    else if((diferencia > 2.2) && (diferencia < 2.3)){
-      mMoveAction.finalMoveAction(1, 0.3);
+    
+    //auto azul
+    if(diferencia<2.2){
+      mMoveAction.finalMoveAction(-1, 0.3);
+  }
+  else if(diferencia>2.2 && diferencia<2.6){
+  mMoveAction.finalMoveAction(-1, 0.3);
+  mIntakeAction.autoIntakeAction(1);
+  }
+  else if(diferencia>2.6 && diferencia<2.7){ 
+  mStopAction.finalStopAction(); 
+  }
+  else if(diferencia>2.7 && diferencia<3.7){
+      mTurnAction.turnAction(-1, 0.5);
+  }
+  else if(diferencia>3.7 && diferencia<3.9){ 
+      mStopAction.finalStopAction(); 
       mCajaAction.autoCajaAction(0.4);
-    }
-    else if((diferencia > 2.3) && (diferencia < 4)){ 
-    mStopAction.finalStopAction(); 
+  }
+  //subirle un poquitito el tiempo para que llegue
+  else if(diferencia>3.9 && diferencia<4.5){ 
+    mMoveAction.finalMoveAction(1, 0.3);
     mCajaAction.autoCajaAction(0.4);
   }
-  else if((diferencia > 4) && (diferencia < 4.5)){ 
-    mTurnAction.turnAction(1, 0.3);
-  }
-  else if((diferencia > 4.5) && (diferencia < 5)){ 
-    mMoveAction.finalMoveAction(1, 0.4);
-  }
-  else if((diferencia > 5) && (diferencia < 5.3)){ 
+
+  else if(diferencia>4.5 && diferencia<4.6){ 
     mStopAction.finalStopAction();
-    mCajaAction.autoCajaAction(-0.4);
+    mCajaAction.autoCajaAction(0.4);
   }
-  else if((diferencia > 5.3) && (diferencia < 5.7)){ 
-    mMoveAction.finalMoveAction(-1, 0.3);
+  else if(diferencia>4.6 && diferencia<5.4){ 
+    mTurnAction.turnAction(-1, 0.5);
+    mCajaAction.autoCajaAction(0.4);
   }
+  else if(diferencia>5.4 && diferencia<5.5){ 
+      mStopAction.finalStopAction();
+      mCajaAction.autoCajaAction(0.4);
+    }
+  else if(diferencia>5.5 && diferencia<6){ 
+      mMoveAction.finalMoveAction(1, 0.3);
+      mCajaAction.autoCajaAction(0.4);
+  }
+  //hasta aqui funciona
+
+  else if(diferencia>6 && diferencia<6.2){ 
+      mStopAction.finalStopAction();
+      mHopperAction.autoHopperAction(0.3);
+    }
+  else if(diferencia>6.2 && diferencia<6.3){ 
+      mHopperAction.autoHopperAction(0);
+      mMoveAction.finalMoveAction(-1, 0.3);
+      mCajaAction.autoCajaAction(-0.4);
+    }
   else{
     mStopAction.finalStopAction();
     mCajaAction.autoCajaAction(0);
-  }  }
+  }
+ 
+}
 
   @Override
   public void teleopInit() {
