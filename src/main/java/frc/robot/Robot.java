@@ -9,6 +9,8 @@ import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.auto.actions.CajaAction;
@@ -48,6 +50,8 @@ public class Robot extends TimedRobot {
   private RobotContainer m_robotContainer;
 
  //Autonomo
+ SendableChooser<String> auto = new SendableChooser<String>();
+ String autoMode = auto.getSelected();
   GetTimeAction mAutoTimer = new GetTimeAction();
   MoveAction mMoveAction = new MoveAction();
   StopAction mStopAction = new StopAction();
@@ -65,6 +69,13 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
+    auto.addOption("autoAzul", "autoAzul");
+    auto.addOption("autoAmarillo", "autoAmarillo");
+    auto.addOption("auto3/5_Azul", "auto3/5_Azul");
+    auto.addOption("auto3/5_Amarillo", "auto3/5_Amarillo");
+    auto.addOption("soloSal", "soloSal");
+    SmartDashboard.putData("Auto Mode", auto);
+
     m_robotContainer = new RobotContainer();
     CameraServer.startAutomaticCapture();
     mPiston.Solenoid1.set(Value.kReverse);
@@ -98,13 +109,12 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    //m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
    // schedule the autonomous command (example)
    /*  if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }  */
-
     mAutoTimer.autoRelativeTimeControl(); //inicializar el timeStap relativo a auto
 
   }
@@ -115,87 +125,87 @@ public class Robot extends TimedRobot {
     mAutoTimer.autoAbsoluteTimeControl(); //inicializa el timeStap absoluto
     double diferencia = mAutoTimer.getAbsoluteTimer()-mAutoTimer.getRelativeTimer();
   
-  //-------------------------------------------------------------------------------------------------------------
-  //auto azul------------------------------------------------------------------------------------
-  /*if(diferencia<2.2){ //avanza
-    mMoveAction.finalMoveAction(-1, 0.3);
-  }
-  else if(diferencia>2.2 && diferencia<2.6){ //come la pelota
-  mMoveAction.finalMoveAction(-1, 0.3);
-  mIntakeAction.autoIntakeAction(1);
-  }
-  else if(diferencia>2.6 && diferencia<2.7){ 
-  mStopAction.finalStopAction(); 
-  }
-  else if(diferencia>2.7 && diferencia<3.7){ //gira 180
-      mTurnAction.turnAction(-1, 0.5);
-  }
-  else if(diferencia>3.7 && diferencia<3.9){ 
-      mStopAction.finalStopAction(); 
-      mCajaAction.autoCajaAction(0.4);
-  }
-  else if(diferencia>3.9 && diferencia<4.8){ //avanza hasta la caja (ayer estaba en 4.5s por si hay que bajarle)
-    mMoveAction.finalMoveAction(1, 0.3);
-    mCajaAction.autoCajaAction(0.4);
-  }
-  else if(diferencia>4.8 && diferencia<4.9){ 
-    mStopAction.finalStopAction();
-    mCajaAction.autoCajaAction(0.4);
-  }
-  else if(diferencia>4.9 && diferencia<5.4){ //gira 90 hacia la zona de carga
-    mTurnAction.turnAction(-1, 0.5);
-    mCajaAction.autoCajaAction(0.4);
-  }
-  else if(diferencia>5.4 && diferencia<5.5){ 
-      mStopAction.finalStopAction();
-      mCajaAction.autoCajaAction(0.4);
+  switch (autoMode){
+    case "autoAzul":
+    if(diferencia<2.2){ //avanza
+      mMoveAction.finalMoveAction(-1, 0.3);
     }
-  else if(diferencia>5.5 && diferencia<8.1){  //avanza hasta la zona de carga (ayer estaba en 6s)
+    else if(diferencia>2.2 && diferencia<2.6){ //come la pelota
+    mMoveAction.finalMoveAction(-1, 0.3);
+    mIntakeAction.autoIntakeAction(1);
+    }
+    else if(diferencia>2.6 && diferencia<2.7){ 
+    mStopAction.finalStopAction(); 
+    }
+    else if(diferencia>2.7 && diferencia<3.7){ //gira 180
+        mTurnAction.turnAction(-1, 0.5);
+    }
+    else if(diferencia>3.7 && diferencia<3.9){ 
+        mStopAction.finalStopAction(); 
+        mCajaAction.autoCajaAction(0.4);
+    }
+    else if(diferencia>3.9 && diferencia<4.8){ //avanza hasta la caja (ayer estaba en 4.5s por si hay que bajarle)
       mMoveAction.finalMoveAction(1, 0.3);
       mCajaAction.autoCajaAction(0.4);
-  }
-  //hasta aqui funcionaba ayer
-  else if(diferencia>8.1 && diferencia<9.1){ //llega y activa el hopper
+    }
+    else if(diferencia>4.8 && diferencia<4.9){ 
       mStopAction.finalStopAction();
-      mHopperAction.autoHopperAction(1);
+      mCajaAction.autoCajaAction(0.4);
     }
-  else if(diferencia>9.1 && diferencia<9.3){  //saca la caja por si de milagro la agarro bien
-      mCajaAction.autoCajaAction(-0.4);
-      mHopperAction.autoHopperAction(0);
+    else if(diferencia>4.9 && diferencia<5.4){ //gira 90 hacia la zona de carga
+      mTurnAction.turnAction(-1, 0.5);
+      mCajaAction.autoCajaAction(0.4);
     }
-  //hasta aqui medianamente probable que funcione, muy poco probable que mate a alguien
-  else if (diferencia>9.3 && diferencia<9.5){ //retrocede poquito pa no pegarle a la caja
-    mMoveAction.finalMoveAction(-1, 0.3);
-   }
-  else if (diferencia>9.5 && diferencia<9.6){ 
-    mStopAction.finalStopAction();
-  }
-  else if (diferencia>9.5 && diferencia<10.1){ //gira 90 para quedar viendo hacia las pelotas
-    mTurnAction.turnAction(1, 0.3);
-  }
-  else if (diferencia>10.1 && diferencia<12.2){ //avanza hacia las pelotas
-    mMoveAction.finalMoveAction(-1, 0.3);
-   }
-  else if (diferencia>12.2 && diferencia<12.6){ //activa el intake mientras llega a las pelotas
-    mMoveAction.finalMoveAction(-1, 0.3);
-    mIntakeAction.autoIntakeAction(1);   }
-  else if (diferencia>12.6 && diferencia<12.7){
-    mStopAction.finalStopAction();
-    mIntakeAction.autoIntakeAction(0);
-  }
-  else if (diferencia>12.7 && diferencia<14.9){ //se va pa tras porque confio mucho en lo que se desvia avanzando y va soltando la pelota porque el hopper es bien lento
-    mMoveAction.finalMoveAction(1, 0.41);
-    mHopperAction.autoHopperAction(1);   
-  }
-  else{ //se apaga todo pa no matar gente
-    mStopAction.finalStopAction();
-    mIntakeAction.autoIntakeAction(0); 
-    mHopperAction.autoHopperAction(0); 
-  }*/
-
-  //------------------------------------------------------------------------------------------------------------------------------
-  //auto amarillo(rojo)-------------------------------------------------------------------------------
-  /*if(diferencia<2.4){ //avanza
+    else if(diferencia>5.4 && diferencia<5.5){ 
+        mStopAction.finalStopAction();
+        mCajaAction.autoCajaAction(0.4);
+      }
+    else if(diferencia>5.5 && diferencia<8.1){  //avanza hasta la zona de carga (ayer estaba en 6s)
+        mMoveAction.finalMoveAction(1, 0.3);
+        mCajaAction.autoCajaAction(0.4);
+    }
+    //hasta aqui funcionaba ayer
+    else if(diferencia>8.1 && diferencia<9.1){ //llega y activa el hopper
+        mStopAction.finalStopAction();
+        mHopperAction.autoHopperAction(1);
+      }
+    else if(diferencia>9.1 && diferencia<9.3){  //saca la caja por si de milagro la agarro bien
+        mCajaAction.autoCajaAction(-0.4);
+        mHopperAction.autoHopperAction(0);
+      }
+    //hasta aqui medianamente probable que funcione, muy poco probable que mate a alguien
+    else if (diferencia>9.3 && diferencia<9.5){ //retrocede poquito pa no pegarle a la caja
+      mMoveAction.finalMoveAction(-1, 0.3);
+     }
+    else if (diferencia>9.5 && diferencia<9.6){ 
+      mStopAction.finalStopAction();
+    }
+    else if (diferencia>9.5 && diferencia<10.1){ //gira 90 para quedar viendo hacia las pelotas
+      mTurnAction.turnAction(1, 0.3);
+    }
+    else if (diferencia>10.1 && diferencia<12.2){ //avanza hacia las pelotas
+      mMoveAction.finalMoveAction(-1, 0.3);
+     }
+    else if (diferencia>12.2 && diferencia<12.6){ //activa el intake mientras llega a las pelotas
+      mMoveAction.finalMoveAction(-1, 0.3);
+      mIntakeAction.autoIntakeAction(1);   }
+    else if (diferencia>12.6 && diferencia<12.7){
+      mStopAction.finalStopAction();
+      mIntakeAction.autoIntakeAction(0);
+    }
+    else if (diferencia>12.7 && diferencia<14.9){ //se va pa tras porque confio mucho en lo que se desvia avanzando y va soltando la pelota porque el hopper es bien lento
+      mMoveAction.finalMoveAction(1, 0.41);
+      mHopperAction.autoHopperAction(1);   
+    }
+    else{ //se apaga todo pa no matar gente
+      mStopAction.finalStopAction();
+      mIntakeAction.autoIntakeAction(0); 
+      mHopperAction.autoHopperAction(0); 
+    }
+    break;
+  
+  case "autoAmarillo":
+  if(diferencia<2.4){ //avanza
     mMoveAction.finalMoveAction(-1, 0.3);
   }
   else if(diferencia>2.4 && diferencia<2.85){ //come la pelota
@@ -269,21 +279,20 @@ public class Robot extends TimedRobot {
     mStopAction.finalStopAction();
     mIntakeAction.autoIntakeAction(0); 
     mHopperAction.autoHopperAction(0); 
-  }*/
+  }
+  break;
 
-  //-----------------------------------------------------------------------------------------------------------
-  //Auto nomas salir
-  /*if(diferencia<1.6){ //avanza
+  case "soloSal":
+  if(diferencia<1.6){ //avanza
     mMoveAction.finalMoveAction(-1, 0.3);
   }
   else{
     mStopAction.finalStopAction();
-  }*/
-
-
-  //-------------------------------------------------------------------------------------------------------------
-  //Auto 3/5 de lingote azul
-/*if(diferencia<2.2){ //avanza
+  }
+  break;
+ 
+  case "auto3/5_Azul":
+  if(diferencia<2.2){ //avanza
     mMoveAction.finalMoveAction(-1, 0.3);
   }
   else if(diferencia>2.2 && diferencia<2.6){ //come la pelota
@@ -333,14 +342,13 @@ public class Robot extends TimedRobot {
   else if (diferencia>9.3 && diferencia<9.5){ //retrocede poquito pa no pegarle a la caja
     mMoveAction.finalMoveAction(-1, 0.3);
    }
-  else (diferencia>9.5 && diferencia<9.6){ 
+  else{ 
     mStopAction.finalStopAction();
-  }*/
+  }
+  break;
 
-
-  //-------------------------------------------------------------------------------------------------------------
-  //auto 3/5 lingote amarillo(rojo)
-  /*if(diferencia<2.4){ //avanza
+  case "auto3/5_Amarillo":
+  if(diferencia<2.4){ //avanza
     mMoveAction.finalMoveAction(-1, 0.3);
   }
   else if(diferencia>2.4 && diferencia<2.85){ //come la pelota
@@ -390,9 +398,11 @@ public class Robot extends TimedRobot {
   else if (diferencia>9.3 && diferencia<9.5){ //retrocede poquito pa no pegarle a la caja
     mMoveAction.finalMoveAction(-1, 0.3);
    }
-  else (diferencia>9.5 && diferencia<9.6){ 
+  else{ 
     mStopAction.finalStopAction();
-  }*/
+  }
+  break;
+  }
 }
 
   @Override
