@@ -32,7 +32,7 @@ public class Constants {
     //public static final int Talon7 = 7;
     public static final int Victor7 = 7; 
     public static final int Talon8 = 8;
-    public static final int Talon9 = 9; 
+    public static final int Talon9 = 7; 
 
     //Drive
     public static final double kDriveRampDeltaSpeed = 0.2;
@@ -59,6 +59,7 @@ public class Constants {
     public static final int kPiston2ReverseId = 7;
     public static final int kAlaLeft = 3;
     public static final int kAlaRight = 4;
+    public static final int kAlaRight2 = 4;
 
     //Caja
     public static final int kMotorCajaRightId = Talon8;
