@@ -38,9 +38,9 @@ public class Constants {
     public static final double kDriveRampDeltaSpeed = 0.2;
     public static final double kDriveSensitivity = 0.7;
     public static final int kDriveRightFrontId = Talon3;
-    public static final int kDriveLeftFrontId = Talon9;
-    public static final int kDriveRightBackId = Talon1;
-    public static final int kDriveLeftBackId = Talon5;
+    public static final int kDriveLeftFrontId = Talon1;
+    public static final int kDriveRightBackId = Talon4;
+    public static final int kDriveLeftBackId = Talon2;
     //Pruebas
     public static double gain = 0.7;
     public static double another_gain = 0.7;
@@ -49,7 +49,7 @@ public class Constants {
     public static final int kMotorAla = Victor7;
 
     //Intake
-    public static final int kIntakeId = Talon6;
+    public static final int kIntakeId = Talon5;
     public static final double kIntakeDemand = 0.65;
 
     //Piston
@@ -61,10 +61,10 @@ public class Constants {
     public static final int kAlaRight = 4;
 
     //Caja
-    public static final int kMotorCajaRightId = Talon2;
-    public static final int kMotorCajaLeftId = Talon4;
+    public static final int kMotorCajaRightId = Talon8;
+    public static final int kMotorCajaLeftId = Talon9;
     public static final double kCajaSensitivity = 0.5;
 
     //Hopper
-    public static final int kHopper1Id = Talon8;
+    public static final int kHopper1Id = Talon6;
 }

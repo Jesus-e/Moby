@@ -16,12 +16,12 @@ public class Piston extends SubsystemBase {
 
   public void mainPiston(boolean active){ 
     if(active){
-      Solenoid1.set(Value.kReverse);
-      Solenoid2.set(Value.kReverse);
-    }
-    else{
       Solenoid1.set(Value.kForward);
       Solenoid2.set(Value.kForward);
+    }
+    else{
+      Solenoid1.set(Value.kReverse);
+      Solenoid2.set(Value.kReverse);
     }
   }
 

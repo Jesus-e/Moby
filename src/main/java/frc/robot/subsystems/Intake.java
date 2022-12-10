@@ -14,8 +14,8 @@ public class Intake extends SubsystemBase {
   //------------------// Funciones del subsistema //-------------------------------//
 
   public void mainIntake(double active){ 
-    if(active > 0.15 ){ 
-        motorIntake.set(ControlMode.PercentOutput, Constants.kIntakeDemand);
+    if(active > 0.15 || active < -0.15){ 
+        motorIntake.set(ControlMode.PercentOutput, active*0.8);
     }
     else{
         motorIntake.set(ControlMode.PercentOutput, 0);
@@ -23,7 +23,7 @@ public class Intake extends SubsystemBase {
   }
 
   public void autoIntake(double autoSpeed){
-    motorIntake.set(ControlMode.PercentOutput, autoSpeed);
+    motorIntake.set(ControlMode.PercentOutput, autoSpeed*0.7);
   }
 
   @Override

@@ -60,6 +60,11 @@ public boolean getRBDrive(){
   }
 
   //mecanismos
+
+  public double getTriggersMecanismos(){
+    return mController2.getRawAxis(Constants.RightTrigger) - mController2.getRawAxis(Constants.LeftTrigger); 
+}
+
   public double getYLeftMecanismos(){
     return mController2.getRawAxis(Constants.LeftYAxis); 
 }

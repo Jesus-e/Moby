@@ -63,8 +63,8 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
     CameraServer.startAutomaticCapture();
-    mPiston.Solenoid1.set(Value.kForward);
-    mPiston.Solenoid2.set(Value.kForward);
+    mPiston.Solenoid1.set(Value.kReverse);
+    mPiston.Solenoid2.set(Value.kReverse);
 
   }
 
@@ -162,7 +162,7 @@ public class Robot extends TimedRobot {
     mDrive.mainDrive(-mControlBoard.getYDrive(), mControlBoard.getXDrive(), mControlBoard.getRBDrive(), mControlBoard.getTriggersAtom(), mControlBoard.getXButtonDrive()); //avanzas y giras con los sticks, si quieres girar en tu eje pica A
     mDrive.DriveLogsOutput();
     
-    mIntake.mainIntake(mControlBoard.getRightTriggerMecanismos());
+    mIntake.mainIntake(mControlBoard.getTriggersMecanismos());
     //mAlas.bajarAlas(mControlBoard.getBButtonDrive());
     mCaja.mainCaja(mControlBoard.getYLeftMecanismos());
     mPiston.mainPiston(mControlBoard.getXButtonMecanismos());
@@ -170,7 +170,7 @@ public class Robot extends TimedRobot {
     mAlas.alaDerecha(mControlBoard.getYButtonMecanismos());
     mAlas.subirAlas(mControlBoard.getLeftTriggerMecanismos());
     //mCajaAction.autoCajaAction(0.3);
-    //mHopper.mainHopper(mControlBoard.getYRightMecanismos());
+    mHopper.mainHopper(mControlBoard.getYRightMecanismos());
 
   }
 
