@@ -67,8 +67,8 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
     CameraServer.startAutomaticCapture();
-    mPiston.Solenoid1.set(Value.kReverse);
-    mPiston.Solenoid2.set(Value.kReverse);
+    mAlas.alaDerecha(false);
+    mCompressor.enableDigital();
 
   }
 
@@ -114,10 +114,15 @@ public class Robot extends TimedRobot {
   public void autonomousPeriodic() {
     mAutoTimer.autoAbsoluteTimeControl(); //inicializa el timeStap absoluto
     double diferencia = mAutoTimer.getAbsoluteTimer()-mAutoTimer.getRelativeTimer();
-  
+    if(diferencia<1.8){ //avanza
+      mMoveAction.finalMoveAction(-1, 0.35);
+    }
+    else{
+      mStopAction.finalStopAction();
+    }
   //-------------------------------------------------------------------------------------------------------------
   //auto azul------------------------------------------------------------------------------------
-  if(diferencia<2.2){ //avanza
+  /*if(diferencia<2.2){ //avanza
     mMoveAction.finalMoveAction(-1, 0.35);
   }
   else if(diferencia>2.2 && diferencia<2.6){ //come la pelota
@@ -195,7 +200,7 @@ public class Robot extends TimedRobot {
     mStopAction.finalStopAction();
     mIntakeAction.autoIntakeAction(0); 
     mHopperAction.autoHopperAction(0); 
-  }
+  }*/
 
   //------------------------------------------------------------------------------------------------------------------------------
   //auto 2()-------------------------------------------------------------------------------
@@ -210,7 +215,7 @@ public class Robot extends TimedRobot {
   mStopAction.finalStopAction(); 
   }
   else if(diferencia>4.4 && diferencia<5){ //gira 90 para ver la caja
-      mTurnAction.turnAction(1, 0.5);
+      mTurnAction.turnAction(-1, 0.5);
   }
   else if(diferencia>5 && diferencia<5.1){ 
       mStopAction.finalStopAction(); 
@@ -223,7 +228,7 @@ public class Robot extends TimedRobot {
   else if(diferencia>7.9 && diferencia<8){ 
     mStopAction.finalStopAction();
     mCajaAction.autoCajaAction(0.4);
-    mHopper.mHopperAction(1);
+    mHopperAction.autoHopperAction(1);
   }
   else if(diferencia>4.9 && diferencia<5.6){ //suelta la pelota
     mCajaAction.autoCajaAction(0.4);
@@ -376,7 +381,6 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    mCompressor.enableDigital();
     boolean enabled = mCompressor.enabled(); //revisar estado de compresor
     boolean pressureSwitch = mCompressor.getPressureSwitchValue();  
 
@@ -387,10 +391,8 @@ public class Robot extends TimedRobot {
     mIntake.mainIntake(mControlBoard.getTriggersMecanismos());
     //mAlas.bajarAlas(mControlBoard.getBButtonDrive());
     mCaja.mainCaja(mControlBoard.getYLeftMecanismos());
-    mPiston.mainPiston(mControlBoard.getXButtonMecanismos());
-    mAlas.alaIzquierda(mControlBoard.getBButtonMecanismos());
-    mAlas.alaDerecha(mControlBoard.getYButtonMecanismos());
-    mAlas.subirAlas(mControlBoard.getLeftTriggerMecanismos());
+      mPiston.mainPiston(mControlBoard.getXButtonMecanismos()); //X para gancho
+      mAlas.alaDerecha(mControlBoard.getYButtonMecanismos());  //B para bajar ala derecha
     //mCajaAction.autoCajaAction(0.3);
     mHopper.mainHopper(mControlBoard.getYRightMecanismos());
 
@@ -398,7 +400,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testInit() {
-    // Cancels all running commands at the start of test mode.
+    // Cancels all running commands at the start of test m
+
     CommandScheduler.getInstance().cancelAll();
   }
 

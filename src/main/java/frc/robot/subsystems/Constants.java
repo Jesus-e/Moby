@@ -24,7 +24,7 @@ public class Constants {
     //Talons
     //1, 6, 8, 9, 2, 3, 4, 5
     public static final int Talon1 = 1;
-    public static final int Talon2 = 2;
+    public static final int Talon2 = 9;
     public static final int Talon3 = 3;
     public static final int Talon4 = 4;
     public static final int Talon5 = 5;
@@ -53,13 +53,13 @@ public class Constants {
     public static final double kIntakeDemand = 0.65;
 
     //Piston
-    public static final int kPiston1ForwardId = 0;
+    public static final int kPiston1ForwardId = 7;
     public static final int kPiston1ReverseId = 1;
     public static final int kPiston2ForwardId = 6;
-    public static final int kPiston2ReverseId = 7;
-    public static final int kAlaLeft = 3;
-    public static final int kAlaRight = 4;
-    public static final int kAlaRight2 = 4;
+    public static final int kPiston2ReverseId = 9;
+    public static final int kAlaLeft = 8;
+    public static final int kAlaRight = 2;
+    public static final int kAlaRight2 = 3;
 
     //Caja
     public static final int kMotorCajaRightId = Talon8;
