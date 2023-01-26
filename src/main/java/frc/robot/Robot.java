@@ -4,28 +4,18 @@
 
 package frc.robot;
 
-import edu.wpi.first.cameraserver.CameraServer;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.auto.actions.CajaAction;
-import frc.robot.auto.actions.GetTimeAction;
-import frc.robot.auto.actions.HopperAction;
-import frc.robot.auto.actions.IntakeAction;
-import frc.robot.auto.actions.MoveAction;
-import frc.robot.auto.actions.StopAction;
-import frc.robot.auto.actions.TurnAction;
-import frc.robot.auto.modes.Test1;
-import frc.robot.subsystems.Alas;
-import frc.robot.subsystems.ControlBoard;
-import frc.robot.subsystems.Drive;
-import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Piston;
-import frc.robot.subsystems.Caja;
-import frc.robot.subsystems.Hopper;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -36,27 +26,18 @@ import frc.robot.subsystems.Hopper;
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
-  //Subsistemas
-  Compressor mCompressor = new Compressor(PneumaticsModuleType.CTREPCM);
-  ControlBoard mControlBoard = new ControlBoard();
-  Drive mDrive = new Drive();
-  Intake mIntake = new Intake();
-  Piston mPiston = new Piston();
-  Alas mAlas = new Alas();
-  Caja mCaja = new Caja();
-  Hopper mHopper = new Hopper();
   private RobotContainer m_robotContainer;
-
- //Autonomo
-  GetTimeAction mAutoTimer = new GetTimeAction();
-  MoveAction mMoveAction = new MoveAction();
-  StopAction mStopAction = new StopAction();
-  Test1 mTest1Mode = new Test1();
-  TurnAction mTurnAction = new TurnAction();
-  CajaAction mCajaAction = new CajaAction();
-  IntakeAction mIntakeAction = new IntakeAction();
-  HopperAction mHopperAction = new HopperAction();
-
+  Compressor compresor = new Compressor(1, PneumaticsModuleType.REVPH);
+  XboxController controld = new XboxController(0);
+  TalonFX Motor1 = new TalonFX(1);
+  TalonFX Motor2 = new TalonFX(2);
+  TalonFX Motor3 = new TalonFX(3);
+  TalonFX Motor4 = new TalonFX(4);
+  TalonFX Motor5 = new TalonFX(5);
+  TalonFX Motor6 = new TalonFX(6);
+  TalonFX Motor7 = new TalonFX(7);
+  TalonFX Motor8 = new TalonFX(8);
+  CANSparkMax Neo1= new CANSparkMax(12, MotorType.kBrushless);
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -66,10 +47,7 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
-    CameraServer.startAutomaticCapture();
-    mAlas.alaDerecha(false);
-    mCompressor.enableDigital();
-
+    compresor.disable();
   }
 
   /**
@@ -100,272 +78,15 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
-   // schedule the autonomous command (example)
-   /*  if (m_autonomousCommand != null) {
+    // schedule the autonomous command (example)
+    if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
-    }  */
-
-    mAutoTimer.autoRelativeTimeControl(); //inicializar el timeStap relativo a auto
-
+    }
   }
 
   /** This function is called periodically during autonomous. */
   @Override
-  public void autonomousPeriodic() {
-    mAutoTimer.autoAbsoluteTimeControl(); //inicializa el timeStap absoluto
-    double diferencia = mAutoTimer.getAbsoluteTimer()-mAutoTimer.getRelativeTimer();
-    if(diferencia<1.8){ //avanza
-      mMoveAction.finalMoveAction(-1, 0.35);
-    }
-    else{
-      mStopAction.finalStopAction();
-    }
-  //-------------------------------------------------------------------------------------------------------------
-  //auto azul------------------------------------------------------------------------------------
-  /*if(diferencia<2.2){ //avanza
-    mMoveAction.finalMoveAction(-1, 0.35);
-  }
-  else if(diferencia>2.2 && diferencia<2.6){ //come la pelota
-  mMoveAction.finalMoveAction(-1, 0.35);
-
-  mIntakeAction.autoIntakeAction(
-    1);
-  }
-  else if(diferencia>2.6 && diferencia<2.7){ 
-  mStopAction.finalStopAction(); 
-  }
-  else if(diferencia>2.7 && diferencia<3.9){ //gira 180
-      mTurnAction.turnAction(-1, 0.5);
-  }
-  else if(diferencia>3.9 && diferencia<4){ 
-      mStopAction.finalStopAction(); 
-      mCajaAction.autoCajaAction(0.4);
-  }
-  else if(diferencia>4 && diferencia<4.5){ //avanza hasta la caja (ayer estaba en 4.5s por si hay que bajarle)
-    mMoveAction.finalMoveAction(1, 0.35);
-    mCajaAction.autoCajaAction(0.4);
-  }
-  else if(diferencia>4.8 && diferencia<4.9){ 
-    mStopAction.finalStopAction();
-    mCajaAction.autoCajaAction(0.4);
-  }
-  else if(diferencia>4.9 && diferencia<5.6){ //gira 90 hacia la zona de carga
-    mTurnAction.turnAction(-1, 0.6);
-    mCajaAction.autoCajaAction(0.4);
-  }
-  else if(diferencia>5.6 && diferencia<5.7){ 
-      mStopAction.finalStopAction();
-      mCajaAction.autoCajaAction(0.4);
-      mHopperAction.autoHopperAction(1);
-    }
-  else if(diferencia>5.7 && diferencia<8.3){  //avanza hasta la zona de carga (ayer estaba en 6s)
-      mMoveAction.finalMoveAction(1, 0.35);
-      mCajaAction.autoCajaAction(0.4);
-      mHopperAction.autoHopperAction(1);
-  }
-  //hasta aqui funcionaba ayer
-  else if(diferencia>8.3 && diferencia<9.1){ //llega y activa el hopper
-      mStopAction.finalStopAction();
-      mHopperAction.autoHopperAction(1);
-    }
-  else if(diferencia>9.1 && diferencia<9.3){  //saca la caja por si de milagro la agarro bien
-      mCajaAction.autoCajaAction(-0.4);
-      mHopperAction.autoHopperAction(0);
-    }
-  //hasta aqui medianamente probable que funcione, muy poco probable que mate a alguien
-  else if (diferencia>9.3 && diferencia<9.5){ //retrocede poquito pa no pegarle a la caja
-    mMoveAction.finalMoveAction(-1, 0.3);
-   }
-  else if (diferencia>9.5 && diferencia<9.6){ 
-    mStopAction.finalStopAction();
-  }
-  else if (diferencia>9.5 && diferencia<10.1){ //gira 90 para quedar viendo hacia las pelotas
-    mTurnAction.turnAction(1, 0.3);
-  }
-  else if (diferencia>10.1 && diferencia<12.2){ //avanza hacia las pelotas
-    mMoveAction.finalMoveAction(-1, 0.3);
-   }
-  else if (diferencia>12.2 && diferencia<12.6){ //activa el intake mientras llega a las pelotas
-    mMoveAction.finalMoveAction(-1, 0.3);
-    mIntakeAction.autoIntakeAction(1);   }
-  else if (diferencia>12.6 && diferencia<12.7){
-    mStopAction.finalStopAction();
-    mIntakeAction.autoIntakeAction(0);
-  }
-  else if (diferencia>12.7 && diferencia<13.7){ //se va pa tras porque confio mucho en lo que se desvia avanzando y va soltando la pelota porque el hopper es bien lento
-    mMoveAction.finalMoveAction(1, 0.41);
-    mHopperAction.autoHopperAction(1);   
-  }
-  else{ //se apaga todo pa no matar gente
-    mStopAction.finalStopAction();
-    mIntakeAction.autoIntakeAction(0); 
-    mHopperAction.autoHopperAction(0); 
-  }*/
-
-  //------------------------------------------------------------------------------------------------------------------------------
-  //auto 2()-------------------------------------------------------------------------------
-  /*if(diferencia<2.2){ //avanza
-    mMoveAction.finalMoveAction(-1, 0.35);
-  }
-  else if(diferencia>2.2 && diferencia<4.3){ //come la pelota
-  mMoveAction.finalMoveAction(-1, 0.35);
-  mIntakeAction.autoIntakeAction(1);
-  }
-  else if(diferencia>4.3 && diferencia<4.4){ 
-  mStopAction.finalStopAction(); 
-  }
-  else if(diferencia>4.4 && diferencia<5){ //gira 90 para ver la caja
-      mTurnAction.turnAction(-1, 0.5);
-  }
-  else if(diferencia>5 && diferencia<5.1){ 
-      mStopAction.finalStopAction(); 
-      mCajaAction.autoCajaAction(0.4);
-  }
-  else if(diferencia>5.1 && diferencia<7.9){ //avanza hasta la zona de carga
-    mMoveAction.finalMoveAction(-1, 0.35);
-    mCajaAction.autoCajaAction(0.4);
-  }
-  else if(diferencia>7.9 && diferencia<8){ 
-    mStopAction.finalStopAction();
-    mCajaAction.autoCajaAction(0.4);
-    mHopperAction.autoHopperAction(1);
-  }
-  else if(diferencia>4.9 && diferencia<5.6){ //suelta la pelota
-    mCajaAction.autoCajaAction(0.4);
-    mHopperAction.autoHopperAction(1);
-  }
-  else if(diferencia>5.6 && diferencia<5.9){ 
-      mStopAction.finalStopAction();
-      mCajaAction.autoCajaAction(-0.4);
-      mHopperAction.autoHopperAction(1);
-    }
-  else if(diferencia>5.7 && diferencia<6.2){  //retrocede
-      mMoveAction.finalMoveAction(-1, 0.35);
-      mCajaAction.autoCajaAction(-0.4);
-      mHopperAction.autoHopperAction(0);
-  }
-  else{ //se apaga todo pa no matar gente
-    mStopAction.finalStopAction();
-    mIntakeAction.autoIntakeAction(0); 
-    mHopperAction.autoHopperAction(0); 
-    mCajaAction.autoCajaAction(0);
-
-  }*/
-
-
-  //-------------------------------------------------------------------------------------------------------------
-  //Auto 3/5 de lingote azul
-/*if(diferencia<2.2){ //avanza
-    mMoveAction.finalMoveAction(-1, 0.3);
-  }
-  else if(diferencia>2.2 && diferencia<2.6){ //come la pelota
-  mMoveAction.finalMoveAction(-1, 0.3);
-  mIntakeAction.autoIntakeAction(1);
-  }
-  else if(diferencia>2.6 && diferencia<2.7){ 
-  mStopAction.finalStopAction(); 
-  }
-  else if(diferencia>2.7 && diferencia<3.7){ //gira 180
-      mTurnAction.turnAction(-1, 0.5);
-  }
-  else if(diferencia>3.7 && diferencia<3.9){ 
-      mStopAction.finalStopAction(); 
-      mCajaAction.autoCajaAction(0.4);
-  }
-  else if(diferencia>3.9 && diferencia<4.8){ //avanza hasta la caja (ayer estaba en 4.5s por si hay que bajarle)
-    mMoveAction.finalMoveAction(1, 0.3);
-    mCajaAction.autoCajaAction(0.4);
-  }
-  else if(diferencia>4.8 && diferencia<4.9){ 
-    mStopAction.finalStopAction();
-    mCajaAction.autoCajaAction(0.4);
-  }
-  else if(diferencia>4.9 && diferencia<5.4){ //gira 90 hacia la zona de carga
-    mTurnAction.turnAction(-1, 0.5);
-    mCajaAction.autoCajaAction(0.4);
-  }
-  else if(diferencia>5.4 && diferencia<5.5){ 
-      mStopAction.finalStopAction();
-      mCajaAction.autoCajaAction(0.4);
-    }
-  else if(diferencia>5.5 && diferencia<8.1){  //avanza hasta la zona de carga (ayer estaba en 6s)
-      mMoveAction.finalMoveAction(1, 0.3);
-      mCajaAction.autoCajaAction(0.4);
-  }
-  //hasta aqui funcionaba ayer
-  else if(diferencia>8.1 && diferencia<9.1){ //llega y activa el hopper
-      mStopAction.finalStopAction();
-      mHopperAction.autoHopperAction(1);
-    }
-  else if(diferencia>9.1 && diferencia<9.3){  //saca la caja por si de milagro la agarro bien
-      mCajaAction.autoCajaAction(-0.4);
-      mHopperAction.autoHopperAction(0);
-    }
-  //hasta aqui medianamente probable que funcione, muy poco probable que mate a alguien
-  else if (diferencia>9.3 && diferencia<9.5){ //retrocede poquito pa no pegarle a la caja
-    mMoveAction.finalMoveAction(-1, 0.3);
-   }
-  else{ 
-    mStopAction.finalStopAction();
-  }*/
-
-
-  //-------------------------------------------------------------------------------------------------------------
-  //auto 3/5 lingote amarillo(rojo)
-  /*if(diferencia<2.4){ //avanza
-    mMoveAction.finalMoveAction(-1, 0.3);
-  }
-  else if(diferencia>2.4 && diferencia<2.85){ //come la pelota
-  mMoveAction.finalMoveAction(-1, 0.3);
-  mIntakeAction.autoIntakeAction(1);
-  }
-  else if(diferencia>2.85 && diferencia<2.9){ 
-  mStopAction.finalStopAction(); 
-  }
-  else if(diferencia>2.9 && diferencia<3.9){ //gira 180
-      mTurnAction.turnAction(-1, 0.5);
-  }
-  else if(diferencia>3.9 && diferencia<4){ 
-      mStopAction.finalStopAction(); 
-      mCajaAction.autoCajaAction(0.4);
-  }
-  else if(diferencia>4 && diferencia<4.9){ //avanza hasta la caja (ayer estaba en 4.5s por si hay que bajarle)
-    mMoveAction.finalMoveAction(1, 0.3);
-    mCajaAction.autoCajaAction(0.4);
-  }
-  else if(diferencia>4.9 && diferencia<5){ 
-    mStopAction.finalStopAction();
-    mCajaAction.autoCajaAction(0.4);
-  }
-  else if(diferencia>5 && diferencia<5.5){ //gira 90 hacia la zona de carga
-    mTurnAction.turnAction(-1, 0.5);
-    mCajaAction.autoCajaAction(0.4);
-  }
-  else if(diferencia>5.5 && diferencia<5.6){ 
-      mStopAction.finalStopAction();
-      mCajaAction.autoCajaAction(0.4);
-    }
-  else if(diferencia>5.6 && diferencia<8.1){  //avanza hasta la zona de carga (ayer estaba en 6s)
-      mMoveAction.finalMoveAction(1, 0.3);
-      mCajaAction.autoCajaAction(0.4);
-  }
-  //hasta aqui funcionaba ayer
-  else if(diferencia>8.1 && diferencia<9.1){ //llega y activa el hopper
-      mStopAction.finalStopAction();
-      mHopperAction.autoHopperAction(1);
-    }
-  else if(diferencia>9.1 && diferencia<9.3){  //saca la caja por si de milagro la agarro bien
-      mCajaAction.autoCajaAction(-0.4);
-      mHopperAction.autoHopperAction(0);
-    }
-  //hasta aqui medianamente probable que funcione, muy poco probable que mate a alguien
-  else if (diferencia>9.3 && diferencia<9.5){ //retrocede poquito pa no pegarle a la caja
-    mMoveAction.finalMoveAction(-1, 0.3);
-   }
-  else{ 
-    mStopAction.finalStopAction();
-  }*/
-}
+  public void autonomousPeriodic() {}
 
   @Override
   public void teleopInit() {
@@ -381,27 +102,64 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    boolean enabled = mCompressor.enabled(); //revisar estado de compresor
-    boolean pressureSwitch = mCompressor.getPressureSwitchValue();  
+    Motor1.set(ControlMode.PercentOutput, controld.getRawAxis(0));
+    Motor2.set(ControlMode.PercentOutput, controld.getRawAxis(0));
+    Motor3.set(ControlMode.PercentOutput, controld.getRawAxis(0));
+    Motor4.set(ControlMode.PercentOutput, controld.getRawAxis(0));
+    Motor5.set(ControlMode.PercentOutput, controld.getRawAxis(0));
+    Motor6.set(ControlMode.PercentOutput, controld.getRawAxis(0));
+    Motor7.set(ControlMode.PercentOutput, controld.getRawAxis(0));
+    Motor8.set(ControlMode.PercentOutput, controld.getRawAxis(0));
 
-    //probar funciones de drive, comentar las que no se esten probando
-    mDrive.mainDrive(-mControlBoard.getYDrive(), mControlBoard.getXDrive(), mControlBoard.getRBDrive(), mControlBoard.getTriggersAtom(), mControlBoard.getXButtonDrive()); //avanzas y giras con los sticks, si quieres girar en tu eje pica A
-    mDrive.DriveLogsOutput();
-    
-    mIntake.mainIntake(mControlBoard.getTriggersMecanismos());
-    //mAlas.bajarAlas(mControlBoard.getBButtonDrive());
-    mCaja.mainCaja(mControlBoard.getYLeftMecanismos());
-      mPiston.mainPiston(mControlBoard.getXButtonMecanismos()); //X para gancho
-      mAlas.alaDerecha(mControlBoard.getYButtonMecanismos());  //B para bajar ala derecha
-    //mCajaAction.autoCajaAction(0.3);
-    mHopper.mainHopper(mControlBoard.getYRightMecanismos());
+    Neo1.set(controld.getRawAxis(2));
+
+
+    TalonUtil.checkError(Motor1.configStatorCurrentLimit(
+      new StatorCurrentLimitConfiguration(
+        true, Constants.kCurrentlimit, Constants.ktriggerThresholdCurrent, Constants.ktriggerThresholdTime
+      ), Constants.ktimeoutMs
+      ), "could not set drive current limits");
+    TalonUtil.checkError(Motor2.configStatorCurrentLimit(
+      new StatorCurrentLimitConfiguration(
+        true, Constants.kCurrentlimit, Constants.ktriggerThresholdCurrent, Constants.ktriggerThresholdTime
+      ), Constants.ktimeoutMs
+      ), "could not set drive current limits");
+    TalonUtil.checkError(Motor3.configStatorCurrentLimit(
+      new StatorCurrentLimitConfiguration(
+        true, Constants.kCurrentlimit, Constants.ktriggerThresholdCurrent, Constants.ktriggerThresholdTime
+      ), Constants.ktimeoutMs
+      ), "could not set drive current limits");
+    TalonUtil.checkError(Motor4.configStatorCurrentLimit(
+      new StatorCurrentLimitConfiguration(
+        true, Constants.kCurrentlimit, Constants.ktriggerThresholdCurrent, Constants.ktriggerThresholdTime
+      ), Constants.ktimeoutMs
+      ), "could not set drive current limits");
+    TalonUtil.checkError(Motor5.configStatorCurrentLimit(
+      new StatorCurrentLimitConfiguration(
+        true, Constants.kCurrentlimit, Constants.ktriggerThresholdCurrent, Constants.ktriggerThresholdTime
+      ), Constants.ktimeoutMs
+      ), "could not set drive current limits");
+    TalonUtil.checkError(Motor6.configStatorCurrentLimit(
+        new StatorCurrentLimitConfiguration(
+          true, Constants.kCurrentlimit, Constants.ktriggerThresholdCurrent, Constants.ktriggerThresholdTime
+        ), Constants.ktimeoutMs
+        ), "could not set drive current limits");
+    TalonUtil.checkError(Motor7.configStatorCurrentLimit(
+      new StatorCurrentLimitConfiguration(
+        true, Constants.kCurrentlimit, Constants.ktriggerThresholdCurrent, Constants.ktriggerThresholdTime
+      ), Constants.ktimeoutMs
+      ), "could not set drive current limits");
+      TalonUtil.checkError(Motor8.configStatorCurrentLimit(
+        new StatorCurrentLimitConfiguration(
+          true, Constants.kCurrentlimit, Constants.ktriggerThresholdCurrent, Constants.ktriggerThresholdTime
+        ), Constants.ktimeoutMs
+        ), "could not set drive current limits");
 
   }
 
   @Override
   public void testInit() {
-    // Cancels all running commands at the start of test m
-
+    // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
   }
 
